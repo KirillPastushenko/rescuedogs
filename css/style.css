@@ -80,7 +80,7 @@ p {margin: 0}
 }
 
 
-body{margin:0; background-color:#000;color: #fff;background-image: url(../img/bg1.jpeg);background-size: auto 100vh;background-repeat: no-repeat;background-position: 0 0;background-attachment: fixed;}
+body{margin:0; background-color:#000;color: #fff;background-image: url(../img/bg1.jpeg);background-size: auto 100vh;background-repeat: no-repeat;background-position: 0 0;background-attachment: fixed;overflow: hidden;}
 
 
 
@@ -99,7 +99,7 @@ body{margin:0; background-color:#000;color: #fff;background-image: url(../img/bg
 .col-1{width:8.33333%}
 
 
-section{height: 100vh}
+section{height: 100vh;width: 100%;position: relative;}
 
 .header{margin: 0 auto; width: 100%; max-width: 1320px; display:flex; justify-content: space-between;}
 h1{max-width: 520px; font-family: 'DrukTextWideCyr-Bold';font-size: 55px;line-height: 60px;text-align: center;letter-spacing: 0.015em;font-weight: 400;}
@@ -114,13 +114,20 @@ h1{max-width: 520px; font-family: 'DrukTextWideCyr-Bold';font-size: 55px;line-he
 .soc-btns{width: 152px; height: 44px; border: solid 1px #fff;margin-bottom: 39px;}
 
 
+#wrap{position: fixed;  height: 100vh; width: 100vw; overflow-y: scroll;-webkit-overflow-scrolling: touch;top: 0;left: 0;}
 
-#section-2 {text-align: center;display: flex;flex-direction: column;flex-wrap: nowrap;justify-content: center;align-items: center; align-content: stretch;}
+#section-2 {text-align: center;display: flex;flex-direction: column;flex-wrap: nowrap;justify-content: center;align-items: center; align-content: stretch;background-color: #cccccc3d;}
 #section-2 p{max-width: 527px;   color: #ffffff;font-family: "Akrobat-SemiBold"; font-size: 17px;font-weight: 400; line-height: 23px; letter-spacing: 0.03em; text-align:left;margin-bottom: 23px;}
-#section-3{background-color: #dedede87;}
+#section-3{background-color: #dedede87;overflow: hidden;}
 
 .dog-item-inner{transform: scale(0)}
+.dog-item-outher {position: relative}
 .dog-item-outher .header{transform: scale(1,0);opacity: 0}
+.dog-item-outher .img-main{width: calc(100% - 100px); padding-left: 50px; transform: scale(0.54);transform-origin: 42% 40%;}
+.dog-item-outher .img-main img{width: 100%}
+.dog-item-outher h2{color: #ffffff;   font-size: 40px;    font-weight: 700;  line-height: 40px;  text-transform: uppercase;letter-spacing: -1.333333px;position: absolute;z-index: 3;top: calc(50% - 88px);left: 55%;font-family: 'DrukTextWideCyr-Heavy';width: 100%;max-width: 440px;}
+
+
 
 
 @keyframes down{
