@@ -72,10 +72,14 @@ $(document).ready(function(){
     let anim = true;
     let vw = $(window).width();
     let vh = $(window).height();
-    let secCount = $('section').length;
+    let secCount = $('section').length + $('[data-id]').length;
     let fullpage = $('#wrap');
     let currSlide = 1;
     
+    clearScroll();
+    
+
+
     function mob(){
         if(vw <= 960) {
             return true;
@@ -86,9 +90,24 @@ $(document).ready(function(){
     
     function slideTo(slide){
         anim = false;
-        if(slide!=0 && slide != secCount+1){
-            $('body').attr('data-slide', slide);
+        let speed = 1200;
+        if(slide>=4){
+            if(slide != secCount){
+                $('body').attr('data-slide', slide);
+                speed = 700;
+            }
+ 
+        } else{
+            if(slide!=0){
+                $('body').attr('data-slide', slide);
+                speed = 1200;
+            }
+ 
         }
+        setTimeout(function(){
+            anim = true;    
+        },speed); 
+
     }
      
 
@@ -107,7 +126,11 @@ $(document).ready(function(){
 
     } 
     
-    
+    function clearScroll(){
+        $('.dog-item').addClass('clear')
+                        .scrollTop(1)
+                        .removeClass('clear');
+    }
 
 
 
@@ -128,10 +151,13 @@ $(document).ready(function(){
 
     /* white gallery*/
    
- 
+    $('.btn-down').on('click',function(){
+        slideTo(2);
+    })
 
 
     $('.dog-item-outher>.img-main, .dog-item-outher>h2').on('click',function(){
+        clearScroll();
         $(this).parent().parent().addClass('active');
         $('body').addClass('inner');
     })
