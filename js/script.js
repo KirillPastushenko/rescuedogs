@@ -153,8 +153,7 @@ $(document).ready(function(){
         }
         
 	});
-
-
+ 
 
 
 
@@ -182,6 +181,30 @@ $(document).ready(function(){
 
 
 
+
+
+    let rtime;
+    let timeout = false;
+    let delta = 100;
+    $(window).resize(function() {
+        rtime = new Date();
+
+        
+        if (timeout === false) {
+            timeout = true;
+            $('body').append('<div id="shadow"></div>')
+            setTimeout(resizeend, delta);
+        }
+    });
+    
+    function resizeend() {
+        if (new Date() - rtime < delta) {
+            setTimeout(resizeend, delta);
+        } else {
+            timeout = false;
+            $('#shadow').remove();
+        }               
+    }
 
 
 
