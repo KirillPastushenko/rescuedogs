@@ -77,7 +77,7 @@ $(document).ready(function(){
     let currSlide = 1;
     
     clearScroll();
-    
+    vertSliderInit();
 
 
     function mob(){
@@ -96,20 +96,29 @@ $(document).ready(function(){
                 $('body').attr('data-slide', slide);
                 speed = 700;
             }
- 
-        } else{
+         } else{
             if(slide!=0){
                 $('body').attr('data-slide', slide);
                 speed = 1200;
             }
- 
-        }
+         }
         setTimeout(function(){
             anim = true;    
         },speed); 
 
     }
      
+
+    function vertSliderInit(){
+        let imgMainHeight = $('.dog-item-outher .img-main img').eq(1)[0].getBoundingClientRect().height;
+        let outherBlockHeight = $('.dog-item-outher ').eq(1).height();
+        let h1 = vh ;
+     //   $('.dog-item[data-id="1"] .img-main').css('transform','scale(0.45) translateY('+h1+'px)');
+        console.log(h1);
+        console.log(imgMainHeight);
+        console.log(vh);
+    }
+
 
 		
     function swipeEvent(event, phase, direction, distance){
