@@ -75,9 +75,10 @@ $(document).ready(function(){
     let secCount = $('section').length + $('[data-id]').length;
     let fullpage = $('#wrap');
     let currSlide = 1;
-    
+    let speed = 1200;
+
     clearScroll();
-    vertSliderInit();
+ 
 
 
     function mob(){
@@ -90,7 +91,7 @@ $(document).ready(function(){
     
     function slideTo(slide){
         anim = false;
-        let speed = 1200;
+        
         if(slide>=4){
             if(slide != secCount){
                 $('body').attr('data-slide', slide);
@@ -109,15 +110,7 @@ $(document).ready(function(){
     }
      
 
-    function vertSliderInit(){
-        let imgMainHeight = $('.dog-item-outher .img-main img').eq(1)[0].getBoundingClientRect().height;
-        let outherBlockHeight = $('.dog-item-outher ').eq(1).height();
-        let h1 = vh ;
-     //   $('.dog-item[data-id="1"] .img-main').css('transform','scale(0.45) translateY('+h1+'px)');
-        console.log(h1);
-        console.log(imgMainHeight);
-        console.log(vh);
-    }
+ 
 
 
 		
@@ -137,28 +130,90 @@ $(document).ready(function(){
     
     function clearScroll(){
         $('.dog-item').addClass('clear')
-                        .scrollTop(1)
-                        .removeClass('clear');
+                      .scrollTop(0)
+                      .removeClass('clear');
+        $('.bar').attr('style','');
     }
 
 
 
-	$(window).on('wheel', function(event){
+
+    $('#wrap').on('mousewheel',function(e){
         currSlide = parseInt($('body').attr('data-slide'));
 		if(!mob() && anim && !$('body').hasClass('inner') ){
- 			event.originalEvent.deltaY < 0 ? slideTo(currSlide - 1) : slideTo(currSlide + 1);
-	 		setTimeout(function(){
-				anim = true;    
-			},1200);  
+            e.deltaY > 0 ? slideTo(currSlide - 1) : slideTo(currSlide + 1);
+            setTimeout(function(){
+                anim = true;    
+            },speed);  
         }
-        
-	});
- 
+    })
+
+
+    $('#menu').on('click',function(){
+        let cont = $('.dog-item.active');
+        $('body').removeClass('inner');
+        if(cont.hasClass('scrolled')){
+            $('body').addClass('closed');
+    
+            setTimeout(function(){
+                $('body').removeClass('closed');
+                cont.removeClass('scrolled')
+                    .removeClass('active');
+                    clearScroll();
+             },430)
+
+        } else {
+            cont.animate({scrollTop: 0}, 400)
+                .removeClass('active');
+        }
+    })
+
+    $('.title-next').on('click',function(){
+        let article = $(this).attr('data-link');
+        let oldArticle = $('.dog-item.active');
+        let newArticle = $('.dog-item[data-id="'+article+'"]');
+        oldArticle.fadeOut(300);
+        newArticle.addClass('no-transitions')
+                  .addClass('active')
+                  .fadeIn(300);
+        $('body').attr('data-slide', 2 + article*1);
+
+        setTimeout(function(){
+            oldArticle.attr('style','')
+                      .removeClass('scrolled')
+                      .removeClass('active');
+
+            newArticle.attr('style','')
+                      .removeClass('no-transitions');
+            clearScroll();
+        },330)
+    })
 
 
 
-    /* white gallery*/
+    
+    let progressLength = $('.bar')[0].getTotalLength();
+    let getHeightActiveDog = function(){
+        return $('.dog-item.active .dog-item-inner').height() + $('.dog-item.active .dog-item-outher').height();
+    }
+
    
+
+    $('[data-id="1"],[data-id="2"],[data-id="3"],[data-id="4"]').scroll(function(e){
+        let progressPercent = ($(this).scrollTop() * 100) / (getHeightActiveDog() - vh)
+        let progressPath = progressLength - progressLength * (progressPercent / 100)
+        if(!$(this).hasClass('scrolled') && progressPercent > 13){
+            $(this).addClass('scrolled');
+        }
+        if(progressPath>0) {
+            $('.bar').css('stroke-dashoffset',progressPath)
+        }
+    })
+
+
+
+
+
     $('.btn-down').on('click',function(){
         slideTo(2);
     })
@@ -182,14 +237,12 @@ $(document).ready(function(){
 
 
 
-
+// Добавление фона при ресайзе
     let rtime;
     let timeout = false;
     let delta = 100;
     $(window).resize(function() {
         rtime = new Date();
-
-        
         if (timeout === false) {
             timeout = true;
             $('body').append('<div id="shadow"></div>')
@@ -216,11 +269,82 @@ $(document).ready(function(){
  
 
 
+/*
+ 
+function $$(q) {
+	var r = document.querySelectorAll(q);
+	//return r.length === 0 ? undefined : r.length === 1 ? r[0] : r;
+	return r.length === 0 ? undefined : r;
+}
+
+var $panoramaContainer = $$('.panorama-container')[0];
+var $panoramaObject = $$('.panorama-object')[0];
+var panoramaContainerRect;
+var panoramaObjectRect;
+var panoramaStartX = 0;
+var panoramaX = 0;
+var panoramaStatus = 0;
+
+function panoramaStart (e) {
+	panoramaStatus = 1;
+	panoramaContainerRect = $panoramaContainer.getBoundingClientRect();
+	panoramaObjectRect = $panoramaObject.getBoundingClientRect();
+	panoramaX = panoramaObjectRect.left;
+	panoramaStartX = parseInt(e.clientX);	
+}
+
+$panoramaContainer.addEventListener('touchstart', function(e){
+	e.preventDefault();
+	var touchObject = e.changedTouches[0];
+	panoramaStart(touchObject);
+}, false);
+
+$panoramaContainer.addEventListener('mousedown', function(e){
+	e.preventDefault();
+	panoramaStart(e);
+}, false);
+
+function panoramaMove(e){
+	var delta = parseInt(e.clientX) - panoramaStartX;
+	var containerWidth = panoramaContainerRect.right - panoramaContainerRect.left;
+	var objectWidth = panoramaObjectRect.right - panoramaObjectRect.left;
+	var panoramaTransform = panoramaX + delta;
+	if (panoramaTransform + objectWidth < containerWidth) panoramaTransform = containerWidth - objectWidth;
+	if (panoramaTransform > 0) panoramaTransform = 0;
+	$panoramaObject.style['transform'] = 'translateX(' + panoramaTransform + 'px)';
+	//TweenMax.to($panoramaObject, 0.7, {x:panoramaTransform})
+}
+
+$panoramaContainer.addEventListener('touchmove', function(e){
+	e.preventDefault();
+	var touchObject = e.changedTouches[0];
+	panoramaMove(touchObject);
+}, false);
+
+window.addEventListener('mousemove', function(e){
+	if (!panoramaStatus) return;
+		panoramaMove(e);
+}, false);
+
+function panoramaStop(e) {
+	panoramaStatus = 0;
+}
+
+$panoramaContainer.addEventListener('touchend', function(e){
+	e.preventDefault();
+	var touchObject = e.changedTouches[0];
+	panoramaStop(touchObject);
+}, false);
+
+window.addEventListener('mouseup', function(e){
+	//e.preventDefault();
+	panoramaStop(e);
+}, false);
 
 
 
 
-
+*/
 
 
 
