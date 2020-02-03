@@ -154,6 +154,7 @@ body[data-slide="6"] .dog-item[data-id="4"]{z-index:5}
 #dogs{width: 100%; height: calc((100vw / 1.714285) * 4); overflow: hidden;transition: transform .7s ease-in-out;position: relative;height: calc(((100vw / 1.714285) * 4) + ((100vh - (45vw / 1.714285)) * 4));}
 .dog-item{transition: all ease-in-out 1s;height: calc(100vw / 1.714285); position: absolute;top: 0;left: 0;width: 100%;height: calc(45vw / 1.714285);overflow: hidden;}
 .dog-item[data-id="1"]{margin-top: calc((100vh - (45vw / 1.714285)) / 2);}
+.dog-item .img-wrap:after{content:"";opacity: 0; background: linear-gradient(180deg, #00000000, #000000);position: absolute;transition: opacity 1s;width: 100%;height: 35%;left: 0;bottom: 0;}
 
 .dog-item.active[data-id="1"]{margin-top: 0}
 .dog-item.active[data-id="2"]{margin-top: calc(((100vh - (45vw / 1.714285)) / 2) + ((45vw / 1.714285) * 1) - 40px);}
@@ -162,7 +163,9 @@ body[data-slide="6"] .dog-item[data-id="4"]{z-index:5}
 
 .dog-item.active{overflow-x:hidden;overflow-y:auto;height: 100vh;z-index: 5 !important;-webkit-overflow-scrolling: touch;-webkit-transform: translateZ(0px);-webkit-transform: translate3d(0,0,0);-webkit-perspective: 1000;scroll-behavior: smooth;/*! background-color: rgba(0, 0, 0, 1); */}
 .dog-item.active .img-main{transform: scale(0.838) translateX(0px) translateY(109px);}
-.dog-item.active .dog-item-outher h2{transform: translate(-50%,320%) scale(1.33);letter-spacing: 0.04em;}
+.dog-item.active .img-wrap:after{opacity: 0.7; }
+.dog-item.active .img-main img{cursor: default}
+.dog-item.active .dog-item-outher h2{transform: translate(-50%,320%) scale(1.33);letter-spacing: 0.04em;cursor: default;}
 .dog-item.active .dog-item-outher .header {transform: translateY(0%) scale(1,1); opacity: 1;}
 .dog-item.active .dog-item-inner{transform: translateY(0%) scale(1,1);opacity: 1;}
 
@@ -183,7 +186,9 @@ body.closed #dogs::after{opacity: 0}
 .dog-item[data-id="3"]{margin-top: calc(((100vh - (45vw / 1.714285)) / 2) + ((45vw / 1.714285) * 2) + ((((100vh - (45vw / 1.714285)) / 2) * 2) - 80px));}
 .dog-item[data-id="4"]{margin-top: calc(((100vh - (45vw / 1.714285)) / 2) + ((45vw / 1.714285) * 3) + ((((100vh - (45vw / 1.714285)) / 2) * 3) - 120px));}
 
-.no-transitions{transition: none!important}
+.no-transitions,
+.no-transitions .img-main,
+.no-transitions h2{transition: none!important}
 .dog-item-outher {position: relative;}
 .dog-item-outher .header{transform: translateY(-100%) scale(1,0);opacity: 0;transition: all ease-in-out 1s;position: absolute;top: 0;}
 .dog-item-outher .img-main{width: 100%; transform: scale(0.45) translateX(-20%) translateY(0%);transform-origin: 50% 0%;transition: all ease-in-out 1s;max-width: 2560px;position: relative;}
