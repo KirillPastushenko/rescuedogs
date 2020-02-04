@@ -31,6 +31,8 @@ $(document).ready(function(){
     let fullpage = $('#wrap');
     let currSlide = 1;
     let speed = 1200;
+    let scrollbar = {};
+    let scrollbarContainer = {};
 
     clearScroll();
      
@@ -104,19 +106,22 @@ $(document).ready(function(){
     $('#menu').on('click',function(){
         let cont = $('.dog-item.active');
         $('body').removeClass('inner');
-        Scrollbar.destroyAll();
+        
         if(cont.hasClass('scrolled')){
             $('body').addClass('closed');
-    
             setTimeout(function(){
                 $('body').removeClass('closed');
+                scrollbar.destroy();
                 cont.removeClass('scrolled')
                     .removeClass('active');
-                    clearScroll();
+                clearScroll();
              },430)
         } else {
-            cont.animate({scrollTop: 0}, 400)
-                .removeClass('active');
+            scrollbar.scrollTo(0, 0, 300);
+            setTimeout(function(){
+                cont.removeClass('active');
+                scrollbar.destroy();
+            },400)
         }
     })
 
@@ -126,7 +131,7 @@ $(document).ready(function(){
         let article = $(this).attr('data-link');
         let oldArticle = $('.dog-item.active');
         let newArticle = $('.dog-item[data-id="'+article+'"]');
-        let scrollbarContainer = newArticle[0];
+        scrollbarContainer = newArticle[0];
         oldArticle.css({'opacity':'0', 'transition':'.3s'});
         newArticle.css('display','none')
                   .addClass('no-transitions')
@@ -147,7 +152,7 @@ $(document).ready(function(){
 
             scrollbar = Scrollbar.init(scrollbarContainer,{});
             scrollbar.addListener((status) => {
-                progressBar(newArticle,status,scrollbar);
+                progressBar(newArticle,status);
                 newArticle.find('.img-par').each(function(){
                     parallaxInContainer($(this));
                 })
@@ -161,25 +166,29 @@ $(document).ready(function(){
 
     // Переход к статье из меню
     $('.dog-item-outher>.img-main, .dog-item-outher>h2').on('click',function(){
-        clearScroll();
-        let activePage = $(this).parent().parent();
-        let scrollbarContainer = activePage[0];
-        activePage.addClass('active');
-        $('body').addClass('inner');
+
         
-        setTimeout(function(){
-            scrollbar = Scrollbar.init(scrollbarContainer,{});
-            scrollbar.addListener((status) => {
-                progressBar(activePage,status,scrollbar);
-                activePage.find('.img-par').each(function(){
-                    parallaxInContainer($(this));
-                })
-                activePage.find('.fade-up,.fade-zoom-up').each(function(){
-                    startAnimation($(this));
-                })
-            });
-            
-        },1200)
+        let activePage = $(this).closest('.dog-item');
+
+        scrollbarContainer = activePage[0];
+
+        if(!activePage.hasClass('active')){
+            clearScroll();
+            activePage.addClass('active');
+            $('body').addClass('inner');
+             setTimeout(function(){
+                scrollbar = Scrollbar.init(scrollbarContainer,{});
+                scrollbar.addListener((status) => {
+                    progressBar(activePage,status);
+                    activePage.find('.img-par').each(function(){
+                        parallaxInContainer($(this));
+                    })
+                    activePage.find('.fade-up,.fade-zoom-up').each(function(){
+                        startAnimation($(this));
+                    })
+                });
+            },1200)
+        }
     })
 
 
@@ -188,7 +197,7 @@ $(document).ready(function(){
         return $('.dog-item.active .dog-item-inner').height() + $('.dog-item.active .dog-item-outher').height();
     }
 
-    function progressBar(obj,status,scrollbar){
+    function progressBar(obj,status){
         let scrTop = status.offset.y;
         let heightContent = scrollbar.getSize().content.height;
         let progressPercent = (scrTop * 100) / (heightContent - vh);
