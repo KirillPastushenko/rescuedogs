@@ -45,39 +45,8 @@ $(document).ready(function(){
             return false;
         }
     }
-    
-    function slideTo(slide){
-        anim = false;
-        if(slide>=4){
-            if(slide != secCount){
-                $('body').attr('data-slide', slide);
-                speed = 700;
-            }
-         } else{
-            if(slide!=0){
-                $('body').attr('data-slide', slide);
-                speed = 1200;
-            }
-         }
-        setTimeout(function(){
-            anim = true;    
-        },speed); 
-    }
-     
 
-    function swipeEvent(event, phase, direction, distance){
-        let threshold = 150;
-        let currid = parseInt($(this).parent().data('slide'));
-        let nextid = currid + 1;
-        let previd = currid - 1;
-        let obj = $('[data-slide="'+currid+'"]');
-        let nextObj = $('[data-slide="'+nextid+'"]');
-        let prevObj = $('[data-slide="'+previd+'"]');
-        
-        if (currid == slideCount) nextid = 3;
-        if (currid == 3) previd = slideCount;
 
-    } 
     
     function clearScroll(){
         $('.dog-item').addClass('clear')
@@ -93,10 +62,18 @@ $(document).ready(function(){
     $('#wrap').on('mousewheel',function(e){
         currSlide = parseInt($('body').attr('data-slide'));
 		if(!mob() && anim && !$('body').hasClass('inner') ){
-            e.deltaY > 0 ? slideTo(currSlide - 1) : slideTo(currSlide + 1);
+            anim = false; 
+            if(e.deltaY > 0){
+                if(currSlide!=0) currSlide-=1;
+            } else {
+                if(currSlide < secCount-1) currSlide+=1;
+            }
+            $('body').attr('data-slide', currSlide);
+            currSlide>=4 ? speed = 700 : speed = 1200;
+            console.log(currSlide);
             setTimeout(function(){
                 anim = true;    
-            },speed);  
+            },speed); 
         }
     })
 
@@ -166,12 +143,8 @@ $(document).ready(function(){
 
     // Переход к статье из меню
     $('.dog-item-outher>.img-main, .dog-item-outher>h2').on('click',function(){
-
-        
         let activePage = $(this).closest('.dog-item');
-
         scrollbarContainer = activePage[0];
-
         if(!activePage.hasClass('active')){
             clearScroll();
             activePage.addClass('active');
@@ -234,51 +207,9 @@ $(document).ready(function(){
     }
 
 
-    
-
-
-   
-/*
-    $('[data-id="1"],[data-id="2"],[data-id="3"],[data-id="4"]').scroll(function(e){
-        //progressbar
-        let progressPercent = ($(this).scrollTop() * 100) / (getHeightActiveDog() - vh)
-        let progressPath = progressLength - progressLength * (progressPercent / 100)
-        if(!$(this).hasClass('scrolled') && progressPercent > 13){
-            $(this).addClass('scrolled');
-        } 
-        if($(this).hasClass('scrolled') && progressPercent < 13){
-            $(this).removeClass('scrolled');
-        }
-        if(progressPath>0) {
-            $('.bar').css('stroke-dashoffset',progressPath)
-        }
-        
-        // параллакс изображений
-        $('.img-par').each(function(){
-            if(elementInViewport($(this)[0])[0]){
-                let imgWrapH = $(this).height();
-                let imgH = $(this).find('img').height();
-                let k = ((elementInViewport($(this)[0])[1].top + elementInViewport($(this)[0])[1].height) * 100)/(elementInViewport($(this)[0])[1].height+(vh));
-                let scrollDestination = -k*((imgH - imgWrapH)/100);
-                $(this).find('img').css('transform','translate(0px,' + scrollDestination + 'px)'); 
-            }
-        })
-    })
-
-*/
-   
-
-
     $('.btn-down').on('click',function(){
-        slideTo(2);
+        $('body').attr('data-slide', 2);
     })
-
-
-
-
-
-
-
 
 
     $('.owl-carousel').owlCarousel({
@@ -290,17 +221,12 @@ $(document).ready(function(){
     });
 
 
-
-
-
     function elementInViewport(el){  
         var bounds = el.getBoundingClientRect();
         return (
             [(bounds.top + bounds.height > 0) && (window.innerHeight - bounds.top > 0),bounds]
         );
     }
-
-
 
 
 
@@ -343,6 +269,28 @@ $(document).ready(function(){
 
 
 /*
+
+    function swipeEvent(event, phase, direction, distance){
+        let threshold = 150;
+        let currid = parseInt($(this).parent().data('slide'));
+        let nextid = currid + 1;
+        let previd = currid - 1;
+        let obj = $('[data-slide="'+currid+'"]');
+        let nextObj = $('[data-slide="'+nextid+'"]');
+        let prevObj = $('[data-slide="'+previd+'"]');
+        
+        if (currid == slideCount) nextid = 3;
+        if (currid == 3) previd = slideCount;
+
+    } 
+
+
+
+
+
+
+
+
  
 function $$(q) {
 	var r = document.querySelectorAll(q);
