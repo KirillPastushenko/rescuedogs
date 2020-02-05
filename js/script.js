@@ -118,10 +118,10 @@ $(document).ready(function(){
              },430)
         } else {
             scrollbar.scrollTo(0, 0, 300);
+            cont.removeClass('active');
             setTimeout(function(){
-                cont.removeClass('active');
                 scrollbar.destroy();
-            },400)
+            },1000)
         }
     })
 
@@ -238,7 +238,7 @@ $(document).ready(function(){
 
 
    
-
+/*
     $('[data-id="1"],[data-id="2"],[data-id="3"],[data-id="4"]').scroll(function(e){
         //progressbar
         let progressPercent = ($(this).scrollTop() * 100) / (getHeightActiveDog() - vh)
@@ -256,7 +256,7 @@ $(document).ready(function(){
         // параллакс изображений
         $('.img-par').each(function(){
             if(elementInViewport($(this)[0])[0]){
-                let imgWrapH = $(this).parent().height();
+                let imgWrapH = $(this).height();
                 let imgH = $(this).find('img').height();
                 let k = ((elementInViewport($(this)[0])[1].top + elementInViewport($(this)[0])[1].height) * 100)/(elementInViewport($(this)[0])[1].height+(vh));
                 let scrollDestination = -k*((imgH - imgWrapH)/100);
@@ -265,8 +265,8 @@ $(document).ready(function(){
         })
     })
 
-
-
+*/
+   
 
 
     $('.btn-down').on('click',function(){
