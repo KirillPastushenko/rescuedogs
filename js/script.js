@@ -39,12 +39,61 @@ $(document).ready(function(){
     
 
     function mob(){
-        if(vw <= 960) {
+        if(vw <= 1024) {
             return true;
         } else {
             return false;
         }
     }
+
+
+
+
+
+    if(mob()){
+        $("#wrap").swipe( {
+            swipeStatus:swipeEvent
+        });
+
+
+        function swipeEvent(event, phase, direction, distance){
+
+            let threshold = 30;
+            currSlide = parseInt($('body').attr('data-slide'));
+            if(anim && !$('body').hasClass('inner')){
+                
+                if(direction == "down" && distance > threshold){
+                    anim = false; 
+                    if(currSlide!=0) currSlide-=1;
+                } 
+                if(direction == "up" && distance > threshold){
+                    anim = false; 
+                    if(currSlide < secCount-1) currSlide+=1;
+                }
+                $('body').attr('data-slide', currSlide);
+                  
+                setTimeout(function(){
+                    anim = true;    
+                },800); 
+            }
+
+        } 
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
@@ -59,7 +108,7 @@ $(document).ready(function(){
 
 
 
-    $('#wrap').on('mousewheel',function(e){
+    $('#wrap').on('mousewheel', function(e){
         currSlide = parseInt($('body').attr('data-slide'));
 		if(!mob() && anim && !$('body').hasClass('inner') ){
             anim = false; 
@@ -70,7 +119,6 @@ $(document).ready(function(){
             }
             $('body').attr('data-slide', currSlide);
             currSlide>=4 ? speed = 700 : speed = 1200;
-            console.log(currSlide);
             setTimeout(function(){
                 anim = true;    
             },speed); 
@@ -82,24 +130,41 @@ $(document).ready(function(){
 
     $('#menu').on('click',function(){
         let cont = $('.dog-item.active');
-        $('body').removeClass('inner');
+        $('body').removeClass('inner') 
+                 .removeClass('show-h2-new');
         
         if(cont.hasClass('scrolled')){
             $('body').addClass('closed');
+
             setTimeout(function(){
                 $('body').removeClass('closed');
                 scrollbar.destroy();
                 cont.removeClass('scrolled')
                     .removeClass('active');
                 clearScroll();
+                $('.h2-wrap-new').remove();
              },430)
+
+             setTimeout(function(){
+                $('body').removeClass('to-inner');
+             },300)
+
         } else {
             scrollbar.scrollTo(0, 0, 300);
+            $('body').addClass('animation');
             cont.removeClass('active');
             setTimeout(function(){
+                $('body').removeClass('animation');
                 scrollbar.destroy();
-            },1000)
+                $('.h2-wrap-new').remove();
+                $('body').removeClass('to-inner');
+            },1000);
+
         }
+
+        
+
+
     })
 
 
@@ -148,8 +213,27 @@ $(document).ready(function(){
         if(!activePage.hasClass('active')){
             clearScroll();
             activePage.addClass('active');
-            $('body').addClass('inner');
-             setTimeout(function(){
+            $('body').addClass('inner')
+                     .addClass('animation');
+                    
+
+       
+                let h2 = activePage.find('.h2-wrap').html();
+                
+                $('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
+                
+        
+                
+
+
+            setTimeout(function(){
+                $('body').addClass('show-h2-new');
+            },501);
+
+            setTimeout(function(){
+               $('body').removeClass('animation');
+               $('body').addClass('to-inner');
+               
                 scrollbar = Scrollbar.init(scrollbarContainer,{});
                 scrollbar.addListener((status) => {
                     progressBar(activePage,status);
@@ -160,16 +244,15 @@ $(document).ready(function(){
                         startAnimation($(this));
                     })
                 });
-            },1200)
+            },1000)
+
 
         }
     })
 
 
     let progressLength = $('.bar')[0].getTotalLength();
-    let getHeightActiveDog = function(){
-        return $('.dog-item.active .dog-item-inner').height() + $('.dog-item.active .dog-item-outher').height();
-    }
+
 
     function progressBar(obj,status){
         let scrTop = status.offset.y;
@@ -269,26 +352,11 @@ $(document).ready(function(){
  
 
 
+
+
+
+
 /*
-
-    function swipeEvent(event, phase, direction, distance){
-        let threshold = 150;
-        let currid = parseInt($(this).parent().data('slide'));
-        let nextid = currid + 1;
-        let previd = currid - 1;
-        let obj = $('[data-slide="'+currid+'"]');
-        let nextObj = $('[data-slide="'+nextid+'"]');
-        let prevObj = $('[data-slide="'+previd+'"]');
-        
-        if (currid == slideCount) nextid = 3;
-        if (currid == 3) previd = slideCount;
-
-    } 
-
-
-
-
-
 
 
 
