@@ -132,10 +132,11 @@ $(document).ready(function(){
         let cont = $('.dog-item.active');
         $('body').removeClass('inner') 
                  .removeClass('show-h2-new');
-        
+           
+
+
         if(cont.hasClass('scrolled')){
             $('body').addClass('closed');
-
             setTimeout(function(){
                 $('body').removeClass('closed');
                 scrollbar.destroy();
@@ -146,9 +147,8 @@ $(document).ready(function(){
              },430)
 
              setTimeout(function(){
-                $('body').removeClass('to-inner');
+                $('body').removeClass('to-inner')
              },300)
-
         } else {
             scrollbar.scrollTo(0, 0, 300);
             $('body').addClass('animation');
@@ -159,8 +159,10 @@ $(document).ready(function(){
                 $('.h2-wrap-new').remove();
                 $('body').removeClass('to-inner');
             },1000);
-
         }
+
+
+
 
         
 
@@ -229,11 +231,9 @@ $(document).ready(function(){
             setTimeout(function(){
                 $('body').addClass('show-h2-new');
             },501);
-
             setTimeout(function(){
                $('body').removeClass('animation');
                $('body').addClass('to-inner');
-               
                 scrollbar = Scrollbar.init(scrollbarContainer,{});
                 scrollbar.addListener((status) => {
                     progressBar(activePage,status);

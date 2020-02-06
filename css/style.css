@@ -163,8 +163,8 @@ body.inner #dogs:after{background-color: rgba(0, 0, 0, 1);}
 body.scrolltop .scroll-content{transform: translate3d(0px, 0px, 0px) !important;transition: .3s;}
 body.animation .scroll-content{transform: translate3d(0px, 0px, 0px) !important;}
 body.animation .h2-wrap h2{transform: translate(0,-150px); opacity: 0}
-.h2-wrap h2{transform: translate(0,0); opacity: 1;}
-body.inner:not(.animation) .h2-wrap{ opacity: 1}
+
+
 
 body[data-slide="1"] #wrap {transform: translateY(0);}
 body[data-slide="2"] #wrap {transform: translateY(-100vh);}
@@ -248,12 +248,11 @@ body[data-slide="7"] .dog-item[data-id="5"] h2{pointer-events:initial}
 
 .dog-item.active .img-main:after{opacity: 0.9; }
 .dog-item.active .img-main img{cursor: default}
-.dog-item.active .h2-wrap-new{ text-shadow: none;  font-size: 77px;  line-height: 60px; text-transform: uppercase;  font-family: 'DrukTextWideCyr-Medium'; max-width: 590px;position: absolute;bottom: 86px;left: 28%;z-index: 3;transition: .7s cubic-bezier(0,.5,.58,1);transform: translate(0,235px);opacity: 0;}
+.dog-item .h2-wrap-new{ text-shadow: none;  /*! font-size: 77px; */  /*! line-height: 60px; */ text-transform: uppercase;  font-family: 'DrukTextWideCyr-Medium'; /*! max-width: 590px; */position: absolute;/*! bottom: 86px; */left: 28%;z-index: 3;transition: .7s cubic-bezier(0,.5,.58,1);/*! transform: translate(0,235px); */opacity: 0;font-size: 5.662vw;line-height: 4.412vw;max-width: 52.382vw;bottom: 6.324vw;transform: translate(0,17.279vw);}
 
-.dog-item .h2-wrap-new h2{text-shadow: none;font-size: 55px;line-height: 60px;letter-spacing: 0.03em;pointer-events: none !important;}
+.dog-item .h2-wrap-new h2{text-shadow: none;font-size: 55px;line-height: 60px;letter-spacing: 0.03em;pointer-events: none !important;/*! opacity: 1; */}
 
 body.show-h2-new .dog-item.active .h2-wrap-new{opacity: 1;transform: translate(0,0);}
-
 
 .dog-item.active  .header {transform: translateY(0%) scale(1,1); opacity: 1;}
 .dog-item.active .dog-item-inner{transform: translateY(0%) scale(1,1);opacity: 1;}
@@ -262,13 +261,7 @@ body.show-h2-new .dog-item.active .h2-wrap-new{opacity: 1;transform: translate(0
 
 .dog-item.active[data-id="1"] .img-main{transform: scale(0.838) translate(0px, 109px);}
 .dog-item.active[data-id="4"] .img-main{transform: scale(0.45) translateX(-20%) translateY(0%);padding-bottom: 24%;opacity: 0;}
-
-/*
-.dog-item.active .dog-item-outher h2{transform: translate(-50%,354%) scale(1.33);letter-spacing: 0.04em;cursor: default;/*! text-shadow: -0 -1.2285px 0 rgb(151,151,151,0),0 -1.2285px 0 rgb(151,151,151,0),-0 1.2285px 0 rgb(151,151,151,0),0 1.2285px 0 rgb(151,151,151,0),-1.2285px -0 0 rgb(151,151,151,0),1.2285px -0 0 rgb(151,151,151,0),-1.2285px 0 0 rgb(151,151,151,0),1.2285px 0 0 rgb(151,151,151,0),-0.61425px -1.2285px 0 rgb(151,151,151,0),0.61425px -1.2285px 0 rgb(151,151,151,0),-0.61425px 1.2285px 0 rgb(151,151,151,0),0.61425px 1.2285px 0 rgb(151,151,151,0),-1.2285px -0.61425px 0 rgb(151,151,151,0),1.2285px -0.61425px 0 rgb(151,151,151,0),-1.2285px 0.61425px 0 rgb(151,151,151,0),1.2285px 0.61425px 0 rgb(151,151,151,0),-1.2285px -1.2285px 0 rgb(151,151,151,0),1.2285px -1.2285px 0 rgb(151,151,151,0),-1.2285px 1.2285px 0 rgb(151,151,151,0),1.2285px 1.2285px 0 rgb(151,151,151,0),-1.2285px -1.2285px 0 rgb(151,151,151,0),1.2285px -1.2285px 0 rgb(151,151,151,0),-1.2285px 1.2285px 0 rgb(151,151,151,0),1.2285px 1.2285px 0 rgb(151,151,151,0); */}
-.dog-item.active .dog-item-outher h2{transform: translate(-50%,354%) scale(1.33);}
-.dog-item.active[data-id="4"] .dog-item-outher h2 {transform: translate(-52%,149%) scale(1);}
-.dog-item.active[data-id="5"] .dog-item-outher h2 {transform: translate(-36%,723%) scale(1.33);}
-*/
+.h2-wrap-new{overflow: hidden;}
 
 
 
@@ -276,11 +269,14 @@ body.show-h2-new .dog-item.active .h2-wrap-new{opacity: 1;transform: translate(0
 .dog-item.clear {height: 100vh;overflow-x:hidden;overflow-y:auto}
 
 
-.dog-item[data-id="3"] h2{max-width: 34vw;}
+
 .dog-item[data-id="5"] h2{max-width: 50vw;font-size: 1.8vw;line-height: 1.33em;}
 .dog-item[data-id="4"] h4{max-width: 100%;font-size: 35px;text-align: center;text-transform: uppercase;letter-spacing: 0.035em;margin-bottom: 140px;font-family: 'DrukTextWideCyr-Medium';}
 .dog-item[data-id="5"] h4{max-width: 100%;font-size: 25px;text-align: center;text-transform: uppercase;letter-spacing: 0.01em;margin-bottom: 140px;font-family: 'DrukTextCyr-Bold';line-height: 1.57;}
 
+
+
+.h2-wrap h2{opacity: 1; transform: translate(0,)}
 
 .no-transitions,
 .no-transitions .img-main,
