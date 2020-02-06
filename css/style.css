@@ -207,7 +207,7 @@ body.closed .dog-item.active .dog-item-inner{opacity: 0;transition: opacity .4s;
 body.closed #dogs::after{opacity: 0}
 body.closed .scroll-content{transform: translate3d(0px, 0px, 0px) !important;}
 
-body.to-inner .dog-item-outher .h2-wrap{opacity: 0; transform: scale(0,0);}
+body.to-inner .dog-item-outher .h2-wrap{/*! opacity: 0; */ /*! transform: scale(0,0); */}
 .dog-item[data-id="1"]{margin-top: calc((100vh - (45vw / 1.714285)) / 2);}
 .dog-item[data-id="2"]{margin-top: calc(((100vh - (45vw / 1.714285)) / 2) + ((45vw / 1.714285) * 1) + ((((100vh - (45vw / 1.714285)) / 2) * 1) - 40px));}
 .dog-item[data-id="3"]{margin-top: calc(((100vh - (45vw / 1.714285)) / 2) + ((45vw / 1.714285) * 2) + ((((100vh - (45vw / 1.714285)) / 2) * 2) - 80px));}
@@ -276,7 +276,7 @@ body.show-h2-new .dog-item.active .h2-wrap-new{opacity: 1;transform: translate(0
 
 
 
-.h2-wrap h2{opacity: 1; transform: translate(0,)}
+body.main .h2-wrap h2{opacity: 1; transform: translate(0,0)}
 
 .no-transitions,
 .no-transitions .img-main,
@@ -288,7 +288,7 @@ body.show-h2-new .dog-item.active .h2-wrap-new{opacity: 1;transform: translate(0
 .dog-item-outher h2{color: #ffffff; font-size: 2.868vw; line-height: 1.03em;  text-transform: uppercase;letter-spacing: 0.02em;cursor: pointer;transition: all ease-in-out 0.5s;font-family: 'DrukTextWideCyr-Medium';text-shadow: -0 -1.2285px 0 rgb(151,151,151,1),0 -1.2285px 0 rgb(151,151,151,1),-0 1.2285px 0 rgb(151,151,151,1),0 1.2285px 0 rgb(151,151,151,1),-1.2285px -0 0 rgb(151,151,151,1),1.2285px -0 0 rgb(151,151,151,1),-1.2285px 0 0 rgb(151,151,151,1),1.2285px 0 0 rgb(151,151,151,1),-0.61425px -1.2285px 0 rgb(151,151,151,1),0.61425px -1.2285px 0 rgb(151,151,151,1),-0.61425px 1.2285px 0 rgb(151,151,151,1),0.61425px 1.2285px 0 rgb(151,151,151,1),-1.2285px -0.61425px 0 rgb(151,151,151,1),1.2285px -0.61425px 0 rgb(151,151,151,1),-1.2285px 0.61425px 0 rgb(151,151,151,1),1.2285px 0.61425px 0 rgb(151,151,151,1),-1.2285px -1.2285px 0 rgb(151,151,151,1),1.2285px -1.2285px 0 rgb(151,151,151,1),-1.2285px 1.2285px 0 rgb(151,151,151,1),1.2285px 1.2285px 0 rgb(151,151,151,1),-1.2285px -1.2285px 0 rgb(151,151,151,1),1.2285px -1.2285px 0 rgb(151,151,151,1),-1.2285px 1.2285px 0 rgb(151,151,151,1),1.2285px 1.2285px 0 rgb(151,151,151,1);}
 .dog-item-outher .h2-wrap {overflow: hidden;position: absolute;z-index: 3;top: 15%;left: 50%;width: 35%;}
 
-
+.h2-wrap h2{opacity: 0; transform:translate(0,-150px)}
 
 
 .dog-item-inner{transform: translateY(15%) scale(1,0);opacity: 0;transition: all ease-in-out 1s;/*! padding-top: calc(95vw / 1.714285); */}

@@ -131,14 +131,12 @@ $(document).ready(function(){
     $('#menu').on('click',function(){
         let cont = $('.dog-item.active');
         $('body').removeClass('inner') 
-                 .removeClass('show-h2-new');
-           
-
-
+                 .removeClass('show-h2-new')
         if(cont.hasClass('scrolled')){
             $('body').addClass('closed');
             setTimeout(function(){
                 $('body').removeClass('closed');
+                         
                 scrollbar.destroy();
                 cont.removeClass('scrolled')
                     .removeClass('active');
@@ -148,17 +146,21 @@ $(document).ready(function(){
 
              setTimeout(function(){
                 $('body').removeClass('to-inner')
+                         .addClass('main');
              },300)
         } else {
             scrollbar.scrollTo(0, 0, 300);
             $('body').addClass('animation');
             cont.removeClass('active');
+
             setTimeout(function(){
                 $('body').removeClass('animation');
                 scrollbar.destroy();
                 $('.h2-wrap-new').remove();
-                $('body').removeClass('to-inner');
+                $('body').removeClass('to-inner')
+                         .addClass('main');
             },1000);
+
         }
 
 
@@ -216,7 +218,8 @@ $(document).ready(function(){
             clearScroll();
             activePage.addClass('active');
             $('body').addClass('inner')
-                     .addClass('animation');
+                     .addClass('animation')
+                     .removeClass('main')
                     
 
        
