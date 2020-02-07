@@ -38,8 +38,8 @@ $(document).ready(function(){
      
     
 
-    function mob(){
-        if(vw <= 1024) {
+    function mob(res){
+        if(vw <= res) {
             return true;
         } else {
             return false;
@@ -50,18 +50,15 @@ $(document).ready(function(){
 
 
 
-    if(mob()){
+    if(mob(1024)){
         $("#wrap").swipe( {
             swipeStatus:swipeEvent
         });
 
-
         function swipeEvent(event, phase, direction, distance){
-
             let threshold = 30;
             currSlide = parseInt($('body').attr('data-slide'));
             if(anim && !$('body').hasClass('inner')){
-                
                 if(direction == "down" && distance > threshold){
                     anim = false; 
                     if(currSlide!=0) currSlide-=1;
@@ -76,21 +73,19 @@ $(document).ready(function(){
                     anim = true;    
                 },800); 
             }
-
         } 
-
     }
 
 
 
-
-
-
-
-
-
-
-
+    if(mob(640)){
+        $('.infogr1-right-item').each(function(){
+            id = $(this).attr('data-info');
+            $(this).detach().insertAfter('.infogr1-left-item[data-info="'+id+'"]');
+            $('.infogr1-right').remove();
+        })
+        $('[data-info="3"]').eq(2).detach().insertAfter('.infogr1-left-item[data-info="3"]');
+    }
 
 
 
@@ -131,12 +126,12 @@ $(document).ready(function(){
     $('#menu').on('click',function(){
         let cont = $('.dog-item.active');
         $('body').removeClass('inner') 
-                 .removeClass('show-h2-new')
+                 .removeClass('show-h2-new');
+
         if(cont.hasClass('scrolled')){
             $('body').addClass('closed');
             setTimeout(function(){
                 $('body').removeClass('closed');
-                         
                 scrollbar.destroy();
                 cont.removeClass('scrolled')
                     .removeClass('active');
@@ -160,7 +155,6 @@ $(document).ready(function(){
                 $('body').removeClass('to-inner')
                          .addClass('main');
             },1000);
-
         }
 
 
@@ -222,10 +216,10 @@ $(document).ready(function(){
                      .removeClass('main')
                     
 
-       
+                let id = activePage.attr('data-id');
                 let h2 = activePage.find('.h2-wrap').html();
-                
-                $('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
+                if (id == '5') $('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для настоящих спасателей</h2></div>')
+                else $('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
                 
         
                 
