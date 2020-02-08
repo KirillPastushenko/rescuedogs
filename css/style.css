@@ -146,6 +146,7 @@ body.d3 #float-dog{ background-image: url(../img/d3.png);}
 #shadow:after{content:"« »";font-family: 'DrukTextWideCyr-Bold';color: #121212;text-align: center;font-size: 12vw;line-height: 8vw;}
 #wrap{position: fixed;  height: auto; width: 100vw; overflow-y: hidden;/*! -webkit-overflow-scrolling: touch; */top: 0;left: 0;transition: all ease-in-out 1.2s;}
 .orange{color:#FFA82F}
+.orange-bu{color:#FFA82F;font-family: 'Akrobat-Bold';font-weight: 700;text-decoration: underline;}
 .grad-black{position: relative;}
 .grad-black:before{content: "";opacity: 1;background: linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,1));position: absolute;width: 100%;height: 44%;left: 0;bottom: 0;pointer-events: none;z-index: 2;}
 
