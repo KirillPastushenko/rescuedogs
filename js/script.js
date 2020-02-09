@@ -68,8 +68,6 @@ $(document).ready(function(){
 
 
 
-
-
     if(mob(1024)){
         $("#wrap").swipe( {
             swipeStatus:swipeEvent
@@ -78,20 +76,21 @@ $(document).ready(function(){
         function swipeEvent(event, phase, direction, distance){
             let threshold = 30;
             currSlide = parseInt($('body').attr('data-slide'));
-            if(anim && !$('body').hasClass('inner')){
+            console.log(isAnim());
+            if(!isAnim() && !$('body').hasClass('inner')){
                 if(direction == "down" && distance > threshold){
-                    anim = false; 
+                    $('body').addClass('anim');
                     if(currSlide!=0) currSlide-=1;
                 } 
                 if(direction == "up" && distance > threshold){
-                    anim = false; 
+                    $('body').addClass('anim');
                     if(currSlide < secCount-1) currSlide+=1;
                 }
                 $('body').attr('data-slide', currSlide);
                   
                 setTimeout(function(){
-                    anim = true;    
-                },800); 
+                    $('body').removeClass('anim');  
+                },700); 
             }
         } 
     }
@@ -108,9 +107,6 @@ $(document).ready(function(){
     }
 
 
-
-
-
     
     function clearScroll(){
         $('.dog-item').addClass('clear')
@@ -120,13 +116,22 @@ $(document).ready(function(){
         $('.anim').removeClass('anim');
     }
 
+    function isAnim(){
+        if($('body').hasClass('anim')) return true
+        else return false
+    }
 
+
+    $('.btn-down').on('click',function(){
+        $('body').attr('data-slide', 2);
+    })
 
 
     $('#wrap').on('mousewheel', function(e){
         currSlide = parseInt($('body').attr('data-slide'));
-		if(!mob() && anim && !$('body').hasClass('inner') ){
-            anim = false; 
+        console.log(isAnim());
+		if(!mob() && !isAnim() && !$('body').hasClass('inner') ){
+            $('body').addClass('anim');
             if(e.deltaY > 0){
                 if(currSlide!=1) currSlide-=1;
             } else {
@@ -135,8 +140,10 @@ $(document).ready(function(){
             $('body').attr('data-slide', currSlide);
             currSlide>=4 ? speed = 700 : speed = 1200;
             setTimeout(function(){
-                anim = true;    
+                $('body').removeClass('anim');    
             },speed); 
+        } else {
+            e.preventDefault();
         }
     })
 
@@ -153,10 +160,8 @@ $(document).ready(function(){
                            .removeClass('hide');
             },700)
         } else{
-
             $('body').removeClass('inner') 
-                    .removeClass('show-h2-new');
-
+                     .removeClass('show-h2-new');
             if(cont.hasClass('scrolled')){
                 $('body').addClass('closed');
                 setTimeout(function(){
@@ -167,31 +172,23 @@ $(document).ready(function(){
                     clearScroll();
                     $('.h2-wrap-new').remove();
                 },430)
-
                 setTimeout(function(){
                     $('body').removeClass('to-inner')
-                            .addClass('main');
+                             .addClass('main');
                 },300)
             } else {
                 scrollbar.scrollTo(0, 0, 300);
-                $('body').addClass('animation');
+                $('body').addClass('anim');
+                scrollbar.destroy();
                 cont.removeClass('active');
-
-                setTimeout(function(){
-                    $('body').removeClass('animation');
-                    scrollbar.destroy();
-                    $('.h2-wrap-new').remove();
-                    $('body').removeClass('to-inner')
-                            .addClass('main');
-                },1000);
+                $('.h2-wrap-new').remove();
+                $('body').removeClass('to-inner')
+                         .addClass('main');
+                 setTimeout(function(){
+                    $('body').removeClass('anim');
+                },500);
             }
         }
-
-
-
-        
-
-
     })
 
 
@@ -203,7 +200,6 @@ $(document).ready(function(){
 
         if(article == 'fin'){
             $('#final').addClass('show');
-
         }else{
             scrollbarContainer = newArticle[0];
             oldArticle.css({'opacity':'0', 'transition':'.3s'});
@@ -212,7 +208,6 @@ $(document).ready(function(){
                     .addClass('active')
                     .fadeIn(400);
             $('body').attr('data-slide', 2 + article*1);
-
             setTimeout(function(){
                 oldArticle.attr('style','')
                         .removeClass('scrolled')
@@ -221,7 +216,6 @@ $(document).ready(function(){
 
                 newArticle.attr('style','')
                         .removeClass('no-transitions');
-
                 clearScroll();
 
                 scrollbar = Scrollbar.init(scrollbarContainer,{damping:'0.06'});
@@ -234,27 +228,27 @@ $(document).ready(function(){
                         startAnimation($(this));
                     })
                 });
+
                 scrollbar.offset.x = 0;
                 scrollbar.limit.x = 0;
                 scrollbar.scrollLeft = 0;
                 scrollbar.track.xAxis.hide();
+                scrollbar.scrollTo(0, 1);
             },430)
         }
     })
 
 
     // Переход к статье из меню
-    $('.dog-item-outher>.img-main, .dog-item-outher>h2').on('click',function(){
+    $('.img-main, .h2-wrap').on('click',function(){
         let activePage = $(this).closest('.dog-item');
         scrollbarContainer = activePage[0];
         if(!activePage.hasClass('active')){
             clearScroll();
             activePage.addClass('active');
             $('body').addClass('inner')
-                     .addClass('animation')
+                     .addClass('anim')
                      .removeClass('main')
-                    
-
                 let id = activePage.attr('data-id');
                 let h2 = activePage.find('.h2-wrap').html();
                 if (id == '5') $('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для настоящих спасателей</h2></div>')
@@ -263,8 +257,9 @@ $(document).ready(function(){
             setTimeout(function(){
                 $('body').addClass('show-h2-new');
             },501);
+
             setTimeout(function(){
-               $('body').removeClass('animation');
+               $('body').removeClass('anim');
                $('body').addClass('to-inner');
                 scrollbar = Scrollbar.init(scrollbarContainer,{damping:'0.06'});
                 scrollbar.addListener((status) => {
@@ -280,9 +275,8 @@ $(document).ready(function(){
                 scrollbar.limit.x = 0;
                 scrollbar.scrollLeft = 0;
                 scrollbar.track.xAxis.hide();
+                scrollbar.scrollTo(0, 1);
             },1000)
-
-
         }
     })
 
@@ -327,9 +321,7 @@ $(document).ready(function(){
     }
 
 
-    $('.btn-down').on('click',function(){
-        $('body').attr('data-slide', 2);
-    })
+
 
 
     $('.owl-carousel').owlCarousel({
@@ -347,6 +339,9 @@ $(document).ready(function(){
             [(bounds.top + bounds.height > 0) && (window.innerHeight - bounds.top > 0),bounds]
         );
     }
+
+
+
 
 
 
@@ -383,19 +378,10 @@ $(document).ready(function(){
 });
 
 
-  
-  
- 
-
-
-
 
 
 
 /*
-
-
-
  
 function $$(q) {
 	var r = document.querySelectorAll(q);
