@@ -223,7 +223,7 @@ $(document).ready(function(){
 
 
   // Переход к следующей статье 
-    $('.title-next').on('click',function(){
+    $('[data-link]').on('click',function(){
         let article = $(this).attr('data-link');
         let oldArticle = $('.dog-item.active');
         let newArticle = $('.dog-item[data-id="'+article+'"]');
