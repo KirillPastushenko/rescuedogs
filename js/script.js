@@ -24,8 +24,12 @@ var mt=function(t){function n(){return null!==t&&t.apply(this,arguments)||this}r
 /*Custom*/
 $(document).ready(function(){
     let anim = true;
-    let vw = $(window).width();
-    let vh = $(window).height();
+    let vw = function(){
+        return $(window).width();
+    }
+    let vh = function(){
+        return  $(window).height();
+    }
     let secCount = $('section').length + $('[data-id]').length;
     let currSlide = 1;
     let speed = 1200;
@@ -37,11 +41,9 @@ $(document).ready(function(){
     let filteredPool = [];
     clearScroll();
      
-  
-
     for (var i = 0; i < numPool.length; i++) {
         if (excludePool.indexOf(numPool[i]) === -1) {
-         filteredPool.push(numPool[i]);
+            filteredPool.push(numPool[i]);
         }
     }
     let rand = filteredPool[Math.floor(Math.random() * filteredPool.length)];
@@ -58,24 +60,29 @@ $(document).ready(function(){
 
     function mob(res){
         if(res === undefined) res = 1024;
-        return vw <= res;
+        return vw() <= res;
     }
 
  
     
-
+    setTimeout(function(){
+        $('body').removeClass('firstrun');
+        if(!$('body').hasClass('pace-done')){
+            $('body').addClass('pace-done');
+            $('.pace').addClass('pace-inactive');
+        }
+    },10000)
 
 
     if(mob(1024)){
         $("#wrap").swipe( {
             swipeStatus:swipeEvent
         });
-
         function swipeEvent(event, phase, direction, distance){
             let threshold = 30;
             currSlide = parseInt($('body').attr('data-slide'));
             if(!isAnim() && !$('body').hasClass('inner') && distance > threshold ){
-                console.log('swipeEvent', isAnim());
+        //      console.log('swipeEvent', isAnim());
                 $('body').addClass('anim');
                 if(direction == "down" && currSlide!=1) currSlide-=1;
                 if(direction == "up" && currSlide < secCount-1) currSlide+=1;
@@ -85,11 +92,12 @@ $(document).ready(function(){
                     $('body').removeClass('anim');  
                 },700); 
             } else {
-                console.log('swipeEvent', isAnim());
+        //      console.log('swipeEvent', isAnim());
                 event.preventDefault();
             }
         } 
     }
+
 
     if(mob(640)){
         $('.infogr1-right-item').each(function(){
@@ -109,6 +117,7 @@ $(document).ready(function(){
         $('.anim').removeClass('anim');
     }
 
+
     function isAnim(){
         return $('body').hasClass('anim');
     }
@@ -117,12 +126,6 @@ $(document).ready(function(){
     $('.btn-down').on('click',function(){
         $('body').attr('data-slide', 2);
     })
-
-
-
-
-
-
 
 
     $('#wrap').on('mousewheel', function(e){
@@ -140,26 +143,18 @@ $(document).ready(function(){
             setTimeout(function(){
                 $('body').removeClass('anim');    
             },speed); 
-            console.log('mousewheel1',isAnim())
+    //        console.log('mousewheel1',isAnim())
         } else {
-            console.log('mousewheel2',isAnim())
+    //        console.log('mousewheel2',isAnim())
             e.preventDefault();
         }
     })
 
 
-
-
-
-
-
-
-
-
-
     $('#menu').on('click',function(){
         let cont = $('.dog-item.active');
-
+        $('body').removeAttr('data-info1')
+                 .removeAttr('data-info2');
         if($('#final').hasClass('show')){
             $('#final').addClass('hide');
             setTimeout(function(){
@@ -170,13 +165,9 @@ $(document).ready(function(){
             $('body').removeClass('inner') 
                      .removeClass('show-h2-new');
 
-
-
-
-
-
             if(cont.hasClass('scrolled')){
                 $('body').addClass('closed');
+                cont.find('.img-main img').attr('style','');
                 setTimeout(function(){
                     scrollbar.destroy();
                     cont.removeClass('scrolled')
@@ -189,14 +180,8 @@ $(document).ready(function(){
                     $('body').removeClass('to-inner')
                              .addClass('main');
                 },300)
-
-
-
             } else {
-
-
                 scrollbar.scrollTo(0, 0, 500);
-               
                 setTimeout(function(){
                     $('body').addClass('anim');
                     scrollbar.destroy();
@@ -205,19 +190,10 @@ $(document).ready(function(){
                     $('body').removeClass('to-inner')
                              .addClass('main');
                 },500)
-               
-
-                 setTimeout(function(){
+                setTimeout(function(){
                     $('body').removeClass('anim');
                 },1500);
             }
-
-
-
-
-
-
-
         }
     })
 
@@ -227,10 +203,12 @@ $(document).ready(function(){
         let article = $(this).attr('data-link');
         let oldArticle = $('.dog-item.active');
         let newArticle = $('.dog-item[data-id="'+article+'"]');
-
+        $('body').removeAttr('data-info1')
+                 .removeAttr('data-info2');
+        oldArticle.find('.img-main img').attr('style','');
         if(article == 'fin'){
             $('#final').addClass('show');
-        }else{
+        } else {
             scrollbarContainer = newArticle[0];
             oldArticle.addClass('shadow');
             newArticle.css('display','none')
@@ -238,19 +216,14 @@ $(document).ready(function(){
                       .addClass('active')
                       .fadeIn(400);
             $('body').attr('data-slide', 2 + article*1);
-
-
-
             setTimeout(function(){
                 oldArticle.removeClass('shadow')
                           .removeClass('scrolled')
                           .removeClass('active');
                 Scrollbar.destroyAll();
-
                 newArticle.attr('style','')
                           .removeClass('no-transitions');
                 clearScroll();
-
                 scrollbar = Scrollbar.init(scrollbarContainer,{damping:'0.06'});
                 scrollbar.setMomentum(0, 0);
                 scrollbar.offset.x = 0;
@@ -258,17 +231,8 @@ $(document).ready(function(){
                 scrollbar.scrollLeft = 0;
                 scrollbar.track.xAxis.hide();
                 scrollbar.addListener(function(status){
-                    progressBar(newArticle,status);
-                    newArticle.find('.img-par').each(function(){
-                        parallaxInContainer($(this));
-                    })
-                    newArticle.find('.img-main').each(function(){
-                        parallaxInContainerImgMain($(this));
-                    })
-                    newArticle.find('.fade-up').each(function(){
-                        startAnimation($(this));
-                    })
-                });
+                    initInnerPage(status,newArticle);
+                })
             },430)
 
 
@@ -277,9 +241,6 @@ $(document).ready(function(){
     })
 
 
-    $('body.main').mousemove(function(e){
-   //     console.log(e.pageX + ", " + e.pageY);
-    })
 
     // Переход к статье из меню
     $('.img-main, .h2-wrap').on('click',function(){
@@ -309,23 +270,41 @@ $(document).ready(function(){
                 scrollbar.limit.x = 0;
                 scrollbar.scrollLeft = 0;
                 scrollbar.track.xAxis.hide();
-
-                scrollbar.addListener(function(status) {
-                    progressBar(activePage,status);
-                    activePage.find('.img-par').each(function(){
-                        parallaxInContainer($(this));
-                    })
-                    activePage.find('.img-main').each(function(){
-                        parallaxInContainerImgMain($(this));
-                    })
-                    activePage.find('.fade-up').each(function(){
-                        startAnimation($(this));
-                    })
+                scrollbar.addListener(function(status){
+                    initInnerPage(status,activePage);
                 })
-
             },1000)
         }
     })
+
+
+
+    function initInnerPage(status, page){
+        progressBar(page,status);
+        page.find('.img-par').each(function(){
+            parallaxInContainer($(this));
+        })
+        page.find('.img-main').each(function(){
+            parallaxInContainerImgMain($(this));
+        })
+        page.find('.fade-up').each(function(){
+            startAnimation($(this));
+        })
+        if(page.attr('data-id') == '4'){
+            let currInfo1Slide = '0';
+            $('.infogr1-right-item').each(function(){
+                let el = $(this);
+                if(elementInViewport(el[0])[0]){
+                    let k = (elementInViewport(el[0])[1].top * 100)/vh();
+                     if(k<=50 && $('body').attr('data-info1') !== currInfo1Slide){
+                        currInfo1Slide = el.attr('data-info');
+                        $('body').attr('data-info1',currInfo1Slide); 
+                    }
+                }
+            })
+            if((elementInViewport($('#infogr1')[0])[1].top * 100)/vh() > 45) $('body').removeAttr('data-info1');
+        }
+    }
 
 
     let progressLength = $('.bar')[0].getTotalLength();
@@ -334,7 +313,7 @@ $(document).ready(function(){
     function progressBar(obj,status){
         let scrTop = status.offset.y;
         let heightContent = scrollbar.getSize().content.height;
-        let progressPercent = (scrTop * 100) / (heightContent - vh);
+        let progressPercent = (scrTop * 100) / (heightContent - vh());
         let progressPath = progressLength - progressLength * (progressPercent / 100);
         if(!obj.hasClass('scrolled') && progressPercent > 13){
             obj.addClass('scrolled');
@@ -350,7 +329,7 @@ $(document).ready(function(){
 
     function startAnimation(obj){
         if(elementInViewport(obj[0])[0]){
-            let k = ((elementInViewport(obj[0])[1].top + elementInViewport(obj[0])[1].height) * 100)/(elementInViewport(obj[0])[1].height+vh);
+            let k = ((elementInViewport(obj[0])[1].top + elementInViewport(obj[0])[1].height) * 100)/(elementInViewport(obj[0])[1].height+vh());
             if(k<=90 && !obj.hasClass('anim')) { 
                 obj.addClass('anim');
             }
@@ -361,7 +340,7 @@ $(document).ready(function(){
         if(elementInViewport(obj[0])[0]){
             let imgWrapH = obj.parent().height();
             let imgH = obj.find('img').height();
-            let k = ((elementInViewport(obj[0])[1].top + elementInViewport(obj[0])[1].height) * 100)/(elementInViewport(obj[0])[1].height+vh);
+            let k = ((elementInViewport(obj[0])[1].top + elementInViewport(obj[0])[1].height) * 100)/(elementInViewport(obj[0])[1].height+vh());
             let scrollDestination = -k*((imgH - imgWrapH)/100);
             obj.find('img').css('transform','translate3d(0,' + scrollDestination + 'px,0)'); 
         }
@@ -379,6 +358,10 @@ $(document).ready(function(){
     
 
 
+  //  $('body.main').mousemove(function(e){
+        //     console.log(e.pageX + ", " + e.pageY);
+  //  })
+     
 
     $('.owl-carousel').owlCarousel({
         loop:true,
@@ -425,95 +408,154 @@ $(document).ready(function(){
 
 
 
-});
+
+
+
+
+
 
 
 
 
 
 /*
+
+
+
+
+    var fpContainer = $('#wrap')[0];
+    var fpObject = $('#scroll-obj1')[0];
+    var fpObject2 = $('#scroll-obj2')[0];
+    var fpContainerRect;
+    var fpObjectRect;
+    var fpTransform = 0;
+    var fpStartY = 0;
+    var fpY = 0;
+    var fpStatus = 0;
+    var fpDelta = 0;
+    
+    function fpStart (e) {
+        fpStatus = 1;
+        fpContainerRect = fpContainer.getBoundingClientRect();
+        fpObjectRect = fpObject.getBoundingClientRect();
+    //	fpX = fpObjectRect.left;
+        fpY = fpObjectRect.top;
+        fpStartY = parseInt(e.clientY);	
+    }
+    
+    fpContainer.addEventListener('touchstart', function(e){
+        e.preventDefault();
+        var touchObject = e.changedTouches[0];
+        fpStart(touchObject);
+    }, false);
+    
+    fpContainer.addEventListener('mousedown', function(e){
+        e.preventDefault();
+        fpStart(e);
+    }, false);
+    
+    function fpMove(e){
+        var containerHeight = fpContainerRect.right - fpContainerRect.left;
+        var objectHeight = fpObjectRect.height;
+        fpDelta = parseInt(e.clientY) - fpStartY;
+        fpTransform = fpY + fpDelta;
+        if (fpTransform + objectHeight < containerHeight) fpTransform = containerHeight - objectHeight;
+        if (fpTransform > 0) fpTransform = 0;
+        fpObject.style['transform'] = 'translate3d(0,' + fpTransform + 'px,0)';
+    }
+    
+    
+    
+    fpContainer.addEventListener('touchmove', function(e){
+        e.preventDefault();
+        var touchObject = e.changedTouches[0];
+        fpMove(touchObject);
+    }, false);
+    
+    window.addEventListener('mousemove', function(e){
+        if (!fpStatus) return;
+            fpMove(e);
+    }, false);
+    
+
+
+
+    function fpStop(e) {
+        fpStatus = 0;
+        currSlide = parseInt($('body').attr('data-slide'));
+        if(Math.abs(fpDelta / vh()) > 0.2){
+            if(fpDelta > 0  && currSlide != 1) doScroll(fpDelta,currSlide,-1); 
+            if(fpDelta < 0  && currSlide < secCount - 1) doScroll(fpDelta,currSlide,1); 
+        } else {
+            $(fpObject).attr('style','');
+        }
+    }
+    
+
+    function doScroll(d,currSlide,direction){
+        let doScrollDestination = 0;
+        if(currSlide <= 3){
+            doScrollDestination = fpTransform + (vh() - d)*direction;
+            fpObject.style['transform'] = 'translate3d(0,' + -doScrollDestination + 'px,0)';
+            $('body').addClass('noanim');
+        } else {
+            doScrollDestination = fpTransform + (vh() - d)*direction;
+            fpObject2.style['transform'] = 'translate3d(0,' + -doScrollDestination + 'px,0)';
+        }
+        setTimeout(function(){
+            direction > 0 ?  $('body').attr('data-slide',++currSlide) : $('body').attr('data-slide',--currSlide);
+            $('#scroll-obj1').attr('style','');
+            setTimeout(function(){
+                $('body').removeClass('noanim');
+            },100)
+            
+        },1000)
+
+    }
+
+
+
+
+    fpContainer.addEventListener('touchend', function(e){
+        e.preventDefault();
+        var touchObject = e.changedTouches[0];
+        fpStop(touchObject);
+    }, false);
+    
+    window.addEventListener('mouseup', function(e){
+        //e.preventDefault();
+        fpStop(e);
+    }, false);
+    
+    
+    
+    
+    */
+
+
+
+
+
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
-function $$(q) {
-	var r = document.querySelectorAll(q);
-	//return r.length === 0 ? undefined : r.length === 1 ? r[0] : r;
-	return r.length === 0 ? undefined : r;
-}
-
-var $panoramaContainer = $$('.panorama-container')[0];
-var $panoramaObject = $$('.panorama-object')[0];
-var panoramaContainerRect;
-var panoramaObjectRect;
-var panoramaStartX = 0;
-var panoramaX = 0;
-var panoramaStatus = 0;
-
-function panoramaStart (e) {
-	panoramaStatus = 1;
-	panoramaContainerRect = $panoramaContainer.getBoundingClientRect();
-	panoramaObjectRect = $panoramaObject.getBoundingClientRect();
-	panoramaX = panoramaObjectRect.left;
-	panoramaStartX = parseInt(e.clientX);	
-}
-
-$panoramaContainer.addEventListener('touchstart', function(e){
-	e.preventDefault();
-	var touchObject = e.changedTouches[0];
-	panoramaStart(touchObject);
-}, false);
-
-$panoramaContainer.addEventListener('mousedown', function(e){
-	e.preventDefault();
-	panoramaStart(e);
-}, false);
-
-function panoramaMove(e){
-	var delta = parseInt(e.clientX) - panoramaStartX;
-	var containerWidth = panoramaContainerRect.right - panoramaContainerRect.left;
-	var objectWidth = panoramaObjectRect.right - panoramaObjectRect.left;
-	var panoramaTransform = panoramaX + delta;
-	if (panoramaTransform + objectWidth < containerWidth) panoramaTransform = containerWidth - objectWidth;
-	if (panoramaTransform > 0) panoramaTransform = 0;
-	$panoramaObject.style['transform'] = 'translateX(' + panoramaTransform + 'px)';
-	//TweenMax.to($panoramaObject, 0.7, {x:panoramaTransform})
-}
-
-$panoramaContainer.addEventListener('touchmove', function(e){
-	e.preventDefault();
-	var touchObject = e.changedTouches[0];
-	panoramaMove(touchObject);
-}, false);
-
-window.addEventListener('mousemove', function(e){
-	if (!panoramaStatus) return;
-		panoramaMove(e);
-}, false);
-
-function panoramaStop(e) {
-	panoramaStatus = 0;
-}
-
-$panoramaContainer.addEventListener('touchend', function(e){
-	e.preventDefault();
-	var touchObject = e.changedTouches[0];
-	panoramaStop(touchObject);
-}, false);
-
-window.addEventListener('mouseup', function(e){
-	//e.preventDefault();
-	panoramaStop(e);
-}, false);
-
-
-
-
-*/
-
-
-
-
-
-
-
 
 
 
