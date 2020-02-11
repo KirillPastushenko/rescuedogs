@@ -39,6 +39,12 @@ $(document).ready(function(){
     let excludePool = [lastDog*1];
     let numPool = [ 1, 2, 3];
     let filteredPool = [];
+    let smoothSpeed = '0.06';
+    function mob(res){
+        if(res === undefined) res = 1024;
+        return vw() <= res;
+    }
+
     clearScroll();
      
     for (var i = 0; i < numPool.length; i++) {
@@ -58,10 +64,7 @@ $(document).ready(function(){
     
 
 
-    function mob(res){
-        if(res === undefined) res = 1024;
-        return vw() <= res;
-    }
+
 
  
     
@@ -71,13 +74,19 @@ $(document).ready(function(){
             $('body').addClass('pace-done');
             $('.pace').addClass('pace-inactive');
         }
-    },10000)
+    },8000)
+
+
+
+
 
 
     if(mob(1024)){
         $("#wrap").swipe( {
             swipeStatus:swipeEvent
         });
+
+
         function swipeEvent(event, phase, direction, distance){
             let threshold = 30;
             currSlide = parseInt($('body').attr('data-slide'));
@@ -87,16 +96,24 @@ $(document).ready(function(){
                 if(direction == "down" && currSlide!=1) currSlide-=1;
                 if(direction == "up" && currSlide < secCount-1) currSlide+=1;
                 $('body').attr('data-slide', currSlide);
-                  
                 setTimeout(function(){
                     $('body').removeClass('anim');  
                 },700); 
             } else {
         //      console.log('swipeEvent', isAnim());
-                event.preventDefault();
+             //   console.log(event);
+             //   event.preventDefault();
             }
         } 
+
+
+  
     }
+
+
+
+
+
 
 
     if(mob(640)){
@@ -106,6 +123,7 @@ $(document).ready(function(){
             $('.infogr1-right').remove();
         })
         $('[data-info="3"]').eq(2).detach().insertAfter('.infogr1-left-item[data-info="3"]');
+        smoothSpeed = 1;
     }
 
    
@@ -128,7 +146,14 @@ $(document).ready(function(){
     })
 
 
-    $('#wrap').on('mousewheel', function(e){
+	var scrollTimestamp = 0;
+	
+    $('#wrap').on('mousewheel', function(e) {
+		var oldTimestamp = scrollTimestamp;
+		scrollTimestamp = e.timeStamp
+		//console.log(e.timeStamp);
+		if (scrollTimestamp - oldTimestamp < 300) return;
+		//console.log(scrollTimestamp - oldTimestamp);
         currSlide = parseInt($('body').attr('data-slide'));
         
 		if(!isAnim() && !$('body').hasClass('inner') ){
@@ -142,13 +167,13 @@ $(document).ready(function(){
             currSlide>=4 ? speed = 700 : speed = 1200;
             setTimeout(function(){
                 $('body').removeClass('anim');    
-            },speed); 
-    //        console.log('mousewheel1',isAnim())
+            },speed);
+            //console.log('mousewheel1',isAnim())
         } else {
-    //        console.log('mousewheel2',isAnim())
+            //console.log('mousewheel2',isAnim())
             e.preventDefault();
         }
-    })
+	});
 
 
     $('#menu').on('click',function(){
@@ -224,7 +249,7 @@ $(document).ready(function(){
                 newArticle.attr('style','')
                           .removeClass('no-transitions');
                 clearScroll();
-                scrollbar = Scrollbar.init(scrollbarContainer,{damping:'0.06'});
+                scrollbar = Scrollbar.init(scrollbarContainer,{damping:smoothSpeed});
                 scrollbar.setMomentum(0, 0);
                 scrollbar.offset.x = 0;
                 scrollbar.limit.x = 0;
@@ -241,9 +266,9 @@ $(document).ready(function(){
     })
 
 
-
     // Переход к статье из меню
     $('.img-main, .h2-wrap').on('click',function(){
+    
         let activePage = $(this).closest('.dog-item');
         scrollbarContainer = activePage[0];
         if(!activePage.hasClass('active')){
@@ -264,7 +289,7 @@ $(document).ready(function(){
             setTimeout(function(){
                $('body').removeClass('anim');
                $('body').addClass('to-inner');
-                scrollbar = Scrollbar.init(scrollbarContainer,{damping:'0.06'});
+                scrollbar = Scrollbar.init(scrollbarContainer,{damping:smoothSpeed});
                 scrollbar.setMomentum(0, 0);
                 scrollbar.offset.x = 0;
                 scrollbar.limit.x = 0;
