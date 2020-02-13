@@ -127,11 +127,12 @@ $(document).ready(function(){
             $(this).detach()
                    .insertBefore('.infogr1-right-item[data-info="'+id+'"]')
                    .addClass('fade-up');
-            $('.infogr1-left').remove();
         })
 
 
         $('[data-info="3"]').eq(2).detach().insertAfter('.infogr1-left-item[data-info="3"]');
+        $('.infogr1-left >svg').detach().appendTo('.infogr1-left-item[data-info="1"]');
+        $('.infogr1-left').remove();
         smoothSpeed = 0.1;
     }
     
@@ -264,11 +265,13 @@ $(document).ready(function(){
                 },300)
             } else {
                 scrollbar.scrollTo(0, 0, 500);
-                $('body').addClass('to-main')
+                $('body').addClass('to-main');
+
                 setTimeout(function(){
                     $('body').addClass('anim');
                     scrollbar.destroy();
-                    cont.removeClass('active');
+                    cont.removeClass('active')
+                        .find('.img-main img').attr('style','');
                     $('.h2-wrap-new').remove();
                     $('body').removeClass('to-inner')
                              .removeClass('to-main')
@@ -382,7 +385,7 @@ $(document).ready(function(){
         } else {
             dataLayer.push({'event':'article_'+pageID});
         }
-   //   history.pushState(null, null, pageID)
+       history.pushState(null, null, pageID)
     }
 
 
@@ -401,8 +404,8 @@ $(document).ready(function(){
         dataLayer.push({'event':str});
     })
   
-    $('#infogr2-packs a').on('click',function(){
-        let s = $(this).attr('title');
+    $('#infogr2-packs a, .prod-link').on('click',function(){
+        let s = $(this).attr('data-title');
         dataLayer.push({'event':'product_'+s});
     })
 
@@ -414,9 +417,11 @@ $(document).ready(function(){
         page.find('.img-par').each(function(){
             parallaxInContainer($(this));
         })
-        page.find('.img-main').each(function(){
-            parallaxInContainerImgMain($(this));
-        })
+        if(!mob(640)){
+            page.find('.img-main').each(function(){
+                parallaxInContainerImgMain($(this));
+            })
+        }
         page.find('.fade-up').each(function(){
             startAnimation($(this));
         })
