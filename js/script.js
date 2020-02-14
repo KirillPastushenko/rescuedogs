@@ -102,7 +102,6 @@ $(document).ready(function(){
         let threshold = 30;
         currSlide = parseInt($('body').attr('data-slide'));
         if(!isAnim() && !$('body').hasClass('inner') && distance > threshold ){
-    //      console.log('swipeEvent', isAnim());
             $('body').addClass('anim');
             if(direction == "down" && currSlide!=1) currSlide-=1;
             if(direction == "up" && currSlide < secCount-1) currSlide+=1;
@@ -133,6 +132,7 @@ $(document).ready(function(){
         $('[data-info="3"]').eq(2).detach().insertAfter('.infogr1-left-item[data-info="3"]');
         $('.infogr1-left >svg').detach().appendTo('.infogr1-left-item[data-info="1"]');
         $('.infogr1-left').remove();
+        $('.btn-down').detach().appendTo('#section-1');
         smoothSpeed = 0.1;
     }
     
@@ -192,19 +192,19 @@ $(document).ready(function(){
         currSlide = parseInt($('body').attr('data-slide'));
         if(!$('body').hasClass('inner')  && !animation){
             switch(e.originalEvent.keyCode){
-                case 38://   38  up
+                case 38:// 38  up
                 case 33:// 33  pageup
                 currSlide--;
                     break;
-                case 32:// 32 space
-                case 34:// 34 pagedown
-                case 40:// 40 down
+                case 32:// 32  space
+                case 34:// 34  pagedown
+                case 40:// 40  down
                 currSlide++;
                     break;
-                case 36://  home
+                case 36:// 36  home
                 currSlide=1;
                     break;
-                case 35://  end
+                case 35:// 35  end
                 currSlide=7;
                     break;
                 default:
@@ -236,52 +236,54 @@ $(document).ready(function(){
         let cont = $('.dog-item.active');
         $('body').removeAttr('data-info1')
                  .removeAttr('data-info2');
+        $('.header').attr('style','');
+   
         if($('#final').hasClass('show')){
             $('#final').addClass('hide');
             setTimeout(function(){
                 $('#final').removeClass('show')
-                           .removeClass('hide');
+                        .removeClass('hide');
             },700)
+        }
+        let l = location.href.substring(0, location.href.length - 1);
+     //   history.pushState(null, null, l);
+        $('body').removeClass('inner') 
+                 .removeClass('show-h2-new');
+        dataLayer.push({'event':'back_to_main_page'});
+        if(cont.hasClass('scrolled')){
+            cont.find('.img-main img').attr('style','');
+            $('body').addClass('to-main');
+
+            setTimeout(function(){
+                scrollbar.destroy();
+                cont.removeClass('scrolled')
+                    .removeClass('active');
+                clearScroll();
+                $('.h2-wrap-new').remove();
+                $('body').removeClass('to-main');
+            },410)
+
+            setTimeout(function(){
+                $('body').removeClass('to-inner')
+                            .addClass('main');
+            },300)
         } else {
-            $('body').removeClass('inner') 
-                     .removeClass('show-h2-new');
-            dataLayer.push({'event':'back_to_main_page'});
-            if(cont.hasClass('scrolled')){
-                cont.find('.img-main img').attr('style','');
-                $('body').addClass('to-main');
+            scrollbar.scrollTo(0, 0, 500);
+            $('body').addClass('to-main');
 
-                setTimeout(function(){
-                    scrollbar.destroy();
-                    cont.removeClass('scrolled')
-                        .removeClass('active');
-                    clearScroll();
-                    $('.h2-wrap-new').remove();
-                    $('body').removeClass('to-main');
-                },410)
-
-                setTimeout(function(){
-                    $('body').removeClass('to-inner')
-                             .addClass('main');
-                },300)
-            } else {
-                scrollbar.scrollTo(0, 0, 500);
-                $('body').addClass('to-main');
-
-                setTimeout(function(){
-                    $('body').addClass('anim');
-                    scrollbar.destroy();
-                    cont.removeClass('active')
-                        .find('.img-main img').attr('style','');
-                    $('.h2-wrap-new').remove();
-                    $('body').removeClass('to-inner')
-                             .removeClass('to-main')
-                             .addClass('main');
-
-                },500)
-                setTimeout(function(){
-                    $('body').removeClass('anim');
-                },1500);
-            }
+            setTimeout(function(){
+                $('body').addClass('anim');
+                scrollbar.destroy();
+                cont.removeClass('active')
+                    .find('.img-main img').attr('style','');
+                $('.h2-wrap-new').remove();
+                $('body').removeClass('to-inner')
+                            .removeClass('to-main')
+                            .addClass('main');
+            },500)
+            setTimeout(function(){
+                $('body').removeClass('anim');
+            },1500);
         }
     })
 
@@ -293,7 +295,7 @@ $(document).ready(function(){
         let newArticle = $('.dog-item[data-id="'+article+'"]');
         $('body').removeAttr('data-info1')
                  .removeAttr('data-info2');
- 
+        $('.header').attr('style','');
         oldArticle.find('.img-main img').attr('style','');
                   
         if(article == 'fin'){
@@ -310,19 +312,14 @@ $(document).ready(function(){
             $('body').attr('data-slide', 2 + article*1);
             setTimeout(function(){
                 let h2 = newArticle.find('.h2-wrap').html();
-                if (article == '5') newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для настоящих спасателей</h2></div>')
+                if (article == '5') newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для&nbsp;настоящих спасателей</h2></div>')
                 else newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
-
-
                 oldArticle.removeClass('shadow')
                           .removeClass('scrolled')
                           .removeClass('active');
                 Scrollbar.destroyAll();
-
                 newArticle.attr('style','')
                           .removeClass('no-transitions');
-
-
                 clearScroll();
                 scrollbar = Scrollbar.init(scrollbarContainer,{damping:smoothSpeed});
                 scrollbar.setMomentum(0, 0);
@@ -332,7 +329,7 @@ $(document).ready(function(){
                 scrollbar.track.xAxis.hide();
                 scrollbar.addListener(function(status){
                     initInnerPage(status,newArticle);
-                })
+                });
                 pushEvent(newArticle);
             },430)
         }
@@ -385,7 +382,7 @@ $(document).ready(function(){
         } else {
             dataLayer.push({'event':'article_'+pageID});
         }
-       history.pushState(null, null, pageID)
+     //   history.pushState(null, null, pageID)
     }
 
 
@@ -414,20 +411,23 @@ $(document).ready(function(){
 
     function initInnerPage(status, page){
         progressBar(page,status);
-        page.find('.img-par').each(function(){
-            parallaxInContainer($(this));
-        })
         if(!mob(640)){
             page.find('.img-main').each(function(){
                 parallaxInContainerImgMain($(this));
+            })
+            page.find('.img-par').each(function(){
+                parallaxInContainer($(this));
+            })
+            page.find('.h2-wrap-new').each(function(){
+                h2TopAnimation($(this));
             })
         }
         page.find('.fade-up').each(function(){
             startAnimation($(this));
         })
-        page.find('.h2-wrap-new').each(function(){
-            h2TopAnimation($(this));
-        })
+
+       
+
 
         if(page.attr('data-id') == '4'){
             let currInfo1Slide = '0';
@@ -500,17 +500,15 @@ $(document).ready(function(){
     }
 
     function h2TopAnimation(obj){
-    
         if(elementInViewport(obj[0])[0]) {
             let cont = obj.parents('.scroll-content');
             let elCont = elementInViewport(cont[0])[1];
             let k = elCont.top * h2Speed;
-           obj.css('transform','translate3d(0,' + k   + 'px,0)'); 
+            obj.css('transform','translate3d(0,' + k   + 'px,0)'); 
+            if(mob(640))  $('.header').css({'transform':'translate3d(0,' + elCont.top + 'px,0)','transition':'0s'}); 
         }
     }
-
-
-    
+ 
     function elementInViewport(el){  
         var bounds = el.getBoundingClientRect();
         return (
