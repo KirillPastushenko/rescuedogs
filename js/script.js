@@ -47,8 +47,12 @@ $(document).ready(function(){
         return vw() <= res;
     }
 
+
+
+
+
     let h2Speed = 0.5;
-    if(mob(640))  h2Speed = 0.2;
+    if(mob(640)) h2Speed = 0.2;
 
     clearScroll();
   
@@ -57,16 +61,16 @@ $(document).ready(function(){
             filteredPool.push(numPool[i]);
         }
     }
-    let rand = filteredPool[Math.floor(Math.random() * filteredPool.length)];
 
+    let rand = filteredPool[Math.floor(Math.random() * filteredPool.length)];
     $('body').addClass('d'+rand);
     localStorage.setItem('dog',rand);
     
 
     Pace.on("done", function() {
         $('body').removeClass('firstload');
-   //     console.log('pace down');
     });
+
     setTimeout(function(){
         $('body').removeClass('firstload');
         if(!$('body').hasClass('pace-done')){
@@ -75,11 +79,38 @@ $(document).ready(function(){
         }
     },8000)
 
-
     let footerContainer = $('#final .container')[0];
     Scrollbar.init(footerContainer,{damping:smoothSpeed});
+  
+    let articleID = location.pathname.replace(new RegExp("/",'g'),"");
 
-/*
+    if(articleID){
+        $('body').addClass('inner')
+                 .addClass('to-inner')
+                 .addClass('show-h2-new')
+                 .removeClass('main')
+                 .attr('data-slide',1*articleID+2);
+        let aObj = $('.dog-item[data-id="'+articleID+'"]');
+        aObj.addClass('active');
+        let h2 = aObj.find('.h2-wrap').html();
+        if (articleID == '5') aObj.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для&nbsp;настоящих спасателей</h2></div>')
+        else aObj.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
+
+        Scrollbar.destroyAll();
+        clearScroll();
+        scrollbar = Scrollbar.init(aObj[0],{damping:smoothSpeed});
+        scrollbar.setMomentum(0, 0);
+        scrollbar.offset.x = 0;
+        scrollbar.limit.x = 0;
+        scrollbar.scrollLeft = 0;
+        scrollbar.track.xAxis.hide();
+        scrollbar.addListener(function(status){
+            initInnerPage(status,aObj);
+        });
+        pushEvent(aObj);
+    }
+
+/*  Добавление версии
     let str = [];
     $('body').append('<div id="t" style="position:fixed;top:0;left:0;width:150px;color:white;z-index:10000;font-family:sans-serif;font-size:14px;"></div>')
  
@@ -120,7 +151,14 @@ $(document).ready(function(){
 
 
     if(mob(640)){
-  
+ 
+        const rootElement = document.querySelector("#root-element")
+        const viewPortH = rootElement.getBoundingClientRect().height;
+        const windowH = window.innerHeight;
+        const browserUiBarsH = viewPortH - windowH;
+        rootElement.style.height = 'calc(100vh - ' + browserUiBarsH + 'px)';
+        $('#section-3 > .container').css('transform','translate3d(0,'+ -browserUiBarsH/2 + 'px,0)');
+
         $('.infogr1-left-item').each(function(){
             id = $(this).attr('data-info');
             $(this).detach()
@@ -232,7 +270,7 @@ $(document).ready(function(){
 
 
 
-    $('#menu').on('click',function(){
+    $('#menu,.progress-circle').on('click',function(){
         let cont = $('.dog-item.active');
         $('body').removeAttr('data-info1')
                  .removeAttr('data-info2');
@@ -245,8 +283,7 @@ $(document).ready(function(){
                         .removeClass('hide');
             },700)
         }
-        let l = location.href.substring(0, location.href.length - 1);
-     //   history.pushState(null, null, l);
+        history.pushState(null, null, location.origin+location.search);
         $('body').removeClass('inner') 
                  .removeClass('show-h2-new');
         dataLayer.push({'event':'back_to_main_page'});
@@ -312,7 +349,7 @@ $(document).ready(function(){
             $('body').attr('data-slide', 2 + article*1);
             setTimeout(function(){
                 let h2 = newArticle.find('.h2-wrap').html();
-                if (article == '5') newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для&nbsp;настоящих спасателей</h2></div>')
+                if (article == '5') newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;– корм для&nbsp;настоящих спасателей</h2></div>')
                 else newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
                 oldArticle.removeClass('shadow')
                           .removeClass('scrolled')
@@ -382,7 +419,10 @@ $(document).ready(function(){
         } else {
             dataLayer.push({'event':'article_'+pageID});
         }
-     //   history.pushState(null, null, pageID)
+
+        if(pageID !== undefined) history.pushState(null, null, location.origin+"/"+pageID + "/"+location.search)
+        else history.pushState(null, null, location.origin + location.search);
+      
     }
 
 
@@ -418,10 +458,10 @@ $(document).ready(function(){
             page.find('.img-par').each(function(){
                 parallaxInContainer($(this));
             })
-            page.find('.h2-wrap-new').each(function(){
-                h2TopAnimation($(this));
-            })
         }
+        page.find('.h2-wrap-new').each(function(){
+            h2TopAnimation($(this));
+        })
         page.find('.fade-up').each(function(){
             startAnimation($(this));
         })
@@ -530,13 +570,6 @@ $(document).ready(function(){
     });
 
 
-
-
-
-
-
-
-
 // Добавление фона при ресайзе
     let rtime;
     let timeout = false;
@@ -558,13 +591,6 @@ $(document).ready(function(){
             $('#shadow').remove();
         }               
     }
-
-
-
-
-
-
-
 
 
 
@@ -706,7 +732,6 @@ $(document).ready(function(){
 
 
  
-
 
 
 
