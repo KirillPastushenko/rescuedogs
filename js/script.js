@@ -41,7 +41,7 @@ $(document).ready(function(){
     let numPool = [ 1, 2, 3];
     let filteredPool = [];
     let smoothSpeed = '0.06';
-
+    let section5H2 = '<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;– корм для настоящих спасателей</h2></div>'
     function mob(res){
         if(res === undefined) res = 1024;
         return vw() <= res;
@@ -93,10 +93,10 @@ $(document).ready(function(){
         let aObj = $('.dog-item[data-id="'+articleID+'"]');
         aObj.addClass('active');
         let h2 = aObj.find('.h2-wrap').html();
-        if (articleID == '5') aObj.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для&nbsp;настоящих спасателей</h2></div>')
+        if (articleID == '5') aObj.find('.dog-item-outher').append(section5H2)
         else aObj.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
+        
 
-        Scrollbar.destroyAll();
         clearScroll();
         scrollbar = Scrollbar.init(aObj[0],{damping:smoothSpeed});
         scrollbar.setMomentum(0, 0);
@@ -348,13 +348,13 @@ $(document).ready(function(){
                       .fadeIn(400);
             $('body').attr('data-slide', 2 + article*1);
             setTimeout(function(){
-                let h2 = newArticle.find('.h2-wrap').html();
-                if (article == '5') newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;– корм для&nbsp;настоящих спасателей</h2></div>')
+                let h2 = newArticle.find('.h2-wrap h2')[0].outerHTML;
+                if (article == '5') newArticle.find('.dog-item-outher').append(section5H2)
                 else newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
                 oldArticle.removeClass('shadow')
                           .removeClass('scrolled')
                           .removeClass('active');
-                Scrollbar.destroyAll();
+                scrollbar.destroy();
                 newArticle.attr('style','')
                           .removeClass('no-transitions');
                 clearScroll();
@@ -384,8 +384,8 @@ $(document).ready(function(){
                      .addClass('anim')
                      .removeClass('main')
                 let id = activePage.attr('data-id');
-                let h2 = activePage.find('.h2-wrap').html();
-                if (id == '5') activePage.find('.dog-item-outher').append('<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;&mdash; корм для настоящих спасателей</h2></div>')
+                let h2 = activePage.find('.h2-wrap h2')[0].outerHTML;
+                if (id == '5') activePage.find('.dog-item-outher').append(section5H2)
                 else activePage.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
                 
             setTimeout(function(){
@@ -393,7 +393,6 @@ $(document).ready(function(){
             },501);
 
             setTimeout(function(){
-
                $('body').removeClass('anim');
                $('body').addClass('to-inner');
                 scrollbar = Scrollbar.init(scrollbarContainer,{damping:smoothSpeed});
@@ -556,10 +555,21 @@ $(document).ready(function(){
         );
     }
 
-  //  $('body.main').mousemove(function(e){
-        //     console.log(e.pageX + ", " + e.pageY);
-  //  })
-     
+    $( window ).mousemove(function( event ) {
+        $('.h2-svg').each(function(){
+            let x, y;
+            let obj = $(this);
+            x = event.pageX;
+            y = event.pageY;
+            let svgx = (x - obj.offset().left) * 700 / obj.width(); 
+            let svgy = (y - obj.offset().top) * 200 / obj.height(); 
+            obj.find("circle").attr('cx', svgx);
+            obj.find("circle").attr('cy', svgy);  
+
+        })
+    });
+
+
 
     $('.owl-carousel').owlCarousel({
         loop:true,
