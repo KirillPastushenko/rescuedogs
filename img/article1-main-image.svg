@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" clip-rule="evenodd" viewBox="0 0 2280 1519">
+  <use width="2280" height="1519" x="0" y="0" xlink:href="#_article1-main-image"/>
+  <path fill="url(#_Linear2)" d="M0 758.8V1519h2280V758.8H0z"/>
+  <defs>
+    <linearGradient id="_Linear2" x1="0" x2="1" y1="0" y2="0" gradientTransform="matrix(0 -760.195 2280 0 1140 1519)" gradientUnits="userSpaceOnUse">
+      <stop offset="0"/>
+      <stop offset="1" stop-opacity="0"/>
+    </linearGradient>
+    <image id="_article1-main-image" xlink:href="article1-main-image.jpeg" width="2280" height="1519"/>
+  </defs>
+</svg>
