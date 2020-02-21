@@ -127,7 +127,7 @@ $(document).ready(function(){
         scrollbar.addListener(function(status){
             initInnerPage(status,aObj);
         });
-        pushEvent(aObj);
+    //    pushEvent(aObj);
     }
 
 /*  Добавление версии
@@ -376,7 +376,7 @@ $(document).ready(function(){
         let oldArticle = $('.dog-item.active');
         let newArticle = $('.dog-item[data-id="'+article+'"]');
         $('body').removeAttr('data-info1')
-                .removeAttr('data-info2');
+                 .removeAttr('data-info2');
         $('.header').attr('style','');
         oldArticle.find('.img-main img').attr('style','');
         if(article == 'fin'){
@@ -385,11 +385,11 @@ $(document).ready(function(){
         } else {
             scrollbarContainer = newArticle[0];
             oldArticle.addClass('shadow')
-                    .find('.h2-wrap-new').remove(); 
+                      .find('.h2-wrap-new').remove(); 
             newArticle.css('display','none')
-                    .addClass('no-transitions')
-                    .addClass('active')
-                    .fadeIn(400);
+                      .addClass('no-transitions')
+                      .addClass('active')
+                      .fadeIn(400);
             $('body').attr('data-slide', 2 + article*1);
             setTimeout(function(){
                 let h2 = newArticle.find('.h2-wrap h2')[0].outerHTML;
@@ -397,11 +397,11 @@ $(document).ready(function(){
                 if (article == '5') newArticle.find('.dog-item-outher').append(section5H2)
                 else newArticle.find('.dog-item-outher').append('<div class="h2-wrap-new">'+h2+'</div>')
                 oldArticle.removeClass('shadow')
-                        .removeClass('scrolled')
-                        .removeClass('active');
+                          .removeClass('scrolled')
+                          .removeClass('active');
                 scrollbar.destroy();
                 newArticle.attr('style','')
-                        .removeClass('no-transitions');
+                          .removeClass('no-transitions');
                 clearScroll();
                 scrollbar = Scrollbar.init(scrollbarContainer,{damping:smoothSpeed});
                 scrollbar.setMomentum(0, 0);
@@ -464,6 +464,7 @@ $(document).ready(function(){
 
     function pushEvent(obj){
         pageID = obj.attr('data-id');
+        console.log('event',pageID);
         if(pageID === undefined){
             dataLayer.push({'event':'about_project'});
         } else {
@@ -471,7 +472,6 @@ $(document).ready(function(){
         }
         if(pageID !== undefined) history.pushState(null, null, location.origin+"/"+pageID + "/"+location.search)
         else history.pushState(null, null, location.origin + location.search);
-      
     }
 
 
