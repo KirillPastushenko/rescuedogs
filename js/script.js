@@ -62,6 +62,12 @@ $(document).ready(function(){
     let smoothSpeed = '0.06';
     let back = false;
     let section5H2 = '<div class="h2-wrap-new"><h2>Purina<sup class="reg">&reg;</sup> Dog Chow<sup class="reg">&reg;</sup>&nbsp;– корм для настоящих спасателей</h2></div>'
+
+
+
+  
+
+
     function mob(res){
         if(res === undefined) res = 1024;
         return vw() <= res;
@@ -294,17 +300,18 @@ $(document).ready(function(){
         toMain();
     })
 
-
     function toMain(){
         let cont = $('.dog-item.active');
         $('body').removeAttr('data-info1')
                  .removeAttr('data-info2');
-        $('.header').attr('style','');
+        $('.header,.infogr1-left').attr('style','');
+        
+
         if($('#final').hasClass('show')){
             $('#final').addClass('hide');
             setTimeout(function(){
                 $('#final').removeClass('show')
-                        .removeClass('hide');
+                           .removeClass('hide');
             },700)
         }
         history.pushState(null, null, location.origin+location.search);
@@ -312,7 +319,7 @@ $(document).ready(function(){
                  .removeClass('show-h2-new');
         dataLayer.push({'event':'back_to_main_page'});
         if(cont.hasClass('scrolled')){
-           // cont.find('.img-main img').attr('style','');
+            cont.find('.img-main img').attr('style','');
             $('body').addClass('to-main') 
                      .addClass('parallax-block');
 
@@ -342,7 +349,7 @@ $(document).ready(function(){
                 $('body').addClass('anim');
                 scrollbar.destroy();
                 cont.removeClass('active')
-                //    .find('.img-main img').attr('style','');
+                    .find('.img-main img').attr('style','');
                 $('.h2-wrap-new').remove();
                 $('body').removeClass('to-inner')
                             .removeClass('to-main')
@@ -355,33 +362,37 @@ $(document).ready(function(){
         }
     }
 
-
   // Переход к следующей статье 
     $('[data-link]').on('click',function(){
-        toArticle($(this).attr('data-link'),true);
+        toArticle($(this).attr('data-link'));
     })
 
+  
     $('.progress-circle').on('click',function(){
-        let article = $('.dog-item.active').attr('data-id');
-        if(article === '1') {
+    /*    let currPage = $('.dog-item.active').attr('data-id');
+        let page = $('body').attr('data-prevpage');
+        if(page === '0') {
             toMain();
         } else {
-            toArticle(article*1-1, false);
+            $('body').attr('data-prevpage',currPage);
+            toArticle(page,true);
         }
+    */
+        history.back()
     })
 
 
-
-    function toArticle(article){
+    function toArticle(article, back){
         let oldArticle = $('.dog-item.active');
         let newArticle = $('.dog-item[data-id="'+article+'"]');
         $('body').removeAttr('data-info1')
                  .removeAttr('data-info2');
-        $('.header').attr('style','');
+        $('.header,.infogr1-left').attr('style','');
         oldArticle.find('.img-main img').attr('style','');
+        $('body').attr('data-prevpage',oldArticle.attr('data-id'));
         if(article == 'fin'){
             $('#final').addClass('show');
-            pushEvent($('#final'));
+            pushEvent($('#final'),back);
         } else {
             scrollbarContainer = newArticle[0];
             oldArticle.addClass('shadow')
@@ -412,12 +423,8 @@ $(document).ready(function(){
                 scrollbar.addListener(function(status){
                     initInnerPage(status,newArticle);
                 });
-                
-                
-          
-                pushEvent(newArticle);
+                pushEvent(newArticle,back);
             //    if(back) scrollbar.scrollTo(0, imgH/4.5, 2000);
-
             },430)
         }
     }
@@ -427,6 +434,8 @@ $(document).ready(function(){
         let activePage = $(this).closest('.dog-item');
         let imgH = activePage.find('.dog-item-outher').height();
         scrollbarContainer = activePage[0];
+        $('body').removeAttr('data-info1')
+                 .removeAttr('data-info2');
         if(!activePage.hasClass('active')){
             clearScroll();
             activePage.addClass('active');
@@ -455,23 +464,23 @@ $(document).ready(function(){
                     initInnerPage(status,activePage);
                 })
                 
-                pushEvent(activePage);
+                pushEvent(activePage,back);
             //    scrollbar.scrollTo(0, imgH/4.5, 2000);
             },1000)
         }
     })
 
-
-    function pushEvent(obj){
+    function pushEvent(obj,back){
         pageID = obj.attr('data-id');
-        console.log('event',pageID);
         if(pageID === undefined){
             dataLayer.push({'event':'about_project'});
         } else {
             dataLayer.push({'event':'article_'+pageID});
         }
-        if(pageID !== undefined) history.pushState(null, null, location.origin+"/"+pageID + "/"+location.search)
-        else history.pushState(null, null, location.origin + location.search);
+        if(!back){
+            if(pageID !== undefined) history.pushState({page:pageID}, "title 1", location.origin+"/"+pageID + "/"+location.search)
+            else history.pushState({page:pageID}, "title 1", location.origin + location.search);
+        }
     }
 
 
@@ -496,8 +505,6 @@ $(document).ready(function(){
     })
 
 
-
-
     function initInnerPage(status, page){
         progressBar(page,status);
         if(!mob(640)){
@@ -514,27 +521,41 @@ $(document).ready(function(){
         page.find('.fade-up').each(function(){
             startAnimation($(this));
         })
- 
-
         if(page.attr('data-id') == '4'){
             let currInfo1Slide = '0';
-            $('.infogr1-right-item').each(function(){
+            let dogBtm = $('.infogr1-left')[0].getBoundingClientRect().bottom;
+            let lastP = $('.infogr1-right-item[data-info="5"] p:last-of-type');
+             $('.infogr1-right-item').each(function(){
                 let el = $(this);
                 if(elementInViewport(el[0])[0]){
                     let k = (elementInViewport(el[0])[1].top * 100)/vh();
-                     if(k<=50 && $('body').attr('data-info1') !== currInfo1Slide){
+                    if(k<=50 && $('body').attr('data-info1') !== currInfo1Slide){
                         currInfo1Slide = el.attr('data-info');
                         $('body').attr('data-info1',currInfo1Slide); 
                     }
                 }
             })
+
+
+            if(elementInViewport(lastP[0])[0]){
+                let p = elementInViewport(lastP[0])[1].bottom;
+                let s = scrollbar.offset.y;
+                let ppos = $('.infogr1-right-item[data-info="5"] p:last-of-type').position().top + $('.infogr1-right-item[data-info="5"] p:last-of-type').parent().position().top
+
+
+                console.log(ppos,s);
+                if(p <= dogBtm){
+                    
+                     $('.infogr1-left').css('transform','translate3D(0,-'+(80 + s - ppos)+'px,0)')
+                }
+            }
+
             if((elementInViewport($('#infogr1')[0])[1].top * 100)/vh() > 45) $('body').removeAttr('data-info1');
         }
     }
 
-
+ 
     let progressLength = $('.bar')[0].getTotalLength();
-
 
     function progressBar(obj,status){
         let scrTop = status.offset.y;
@@ -595,9 +616,7 @@ $(document).ready(function(){
  
     function elementInViewport(el){  
         var bounds = el.getBoundingClientRect();
-        return (
-            [(bounds.top + bounds.height > 0) && (window.innerHeight - bounds.top > 0),bounds]
-        );
+        return ([(bounds.top + bounds.height > 0) && (window.innerHeight - bounds.top > 0),bounds]);
     }
 
     $( window ).mousemove(function( event ) {
@@ -612,7 +631,6 @@ $(document).ready(function(){
                 obj.find("circle").attr('cx', svgx);
                 obj.find("circle").attr('cy', svgy);  
             })
-        
             $('.img-main img').each(function(){
                 let imgH = Math.round($(this)[0].getBoundingClientRect().height);
                 let imgW = Math.round($(this)[0].getBoundingClientRect().width);
@@ -628,18 +646,8 @@ $(document).ready(function(){
                 let diffY = imgY - imgParentY; 
                 let transX = Math.round(((curX*100/vw()) * diffW) / 100);
                 let transY = Math.round(((curY*100/vh()) * (diffH-diffY)) / 100);
-
-            //  console.log(curY*100/vh(), curX*100/vw());
-            //  console.log(diffH, diffY, diffW, diffX) 
                TweenMax.to($(this), 0.5,{x:transX,y:transY,scale:1.05, ease: Power4.easeOut});
-            //  $(this).css('transform','scale(1.05) translate3d('+transX+'px, '+transY+'px, 0)');
-
-
-                
             })
-
-
-
         }
     });
 
@@ -653,7 +661,7 @@ $(document).ready(function(){
         smartSpeed:650
     });
 
-
+ 
 // Добавление фона при ресайзе
     let rtime;
     let timeout = false;
@@ -677,145 +685,139 @@ $(document).ready(function(){
     }
 
 
-
-
-
-
-/*
-
-    var fpContainer = $('#wrap')[0];
-    var fpObject = $('#scroll-obj1')[0];
-    var fpObject2 = $('#scroll-obj2')[0];
-    var fpContainerRect;
-    var fpObjectRect;
-    var fpTransform = 0;
-    var fpStartY = 0;
-    var fpY = 0;
-    var fpStatus = 0;
-    var fpDelta = 0;
-    
-    function fpStart (e) {
-        fpStatus = 1;
-        fpContainerRect = fpContainer.getBoundingClientRect();
-        fpObjectRect = fpObject.getBoundingClientRect();
-    //	fpX = fpObjectRect.left;
-        fpY = fpObjectRect.top;
-        fpStartY = parseInt(e.clientY);	
+    if(history.pushState){
+        window.onpopstate = function(event) {
+            if(event.state === null) toMain();
+            else toArticle(event.state.page,true);
+        };
     }
     
-    fpContainer.addEventListener('touchstart', function(e){
-        e.preventDefault();
-        var touchObject = e.changedTouches[0];
-        fpStart(touchObject);
-    }, false);
-    
-    fpContainer.addEventListener('mousedown', function(e){
-        e.preventDefault();
-        fpStart(e);
-    }, false);
-    
-    function fpMove(e){
-        var containerHeight = fpContainerRect.right - fpContainerRect.left;
-        var objectHeight = fpObjectRect.height;
-        fpDelta = parseInt(e.clientY) - fpStartY;
-        fpTransform = fpY + fpDelta;
-        if (fpTransform + objectHeight < containerHeight) fpTransform = containerHeight - objectHeight;
-        if (fpTransform > 0) fpTransform = 0;
-        fpObject.style['transform'] = 'translate3d(0,' + fpTransform + 'px,0)';
-    }
-    
-    
-    
-    fpContainer.addEventListener('touchmove', function(e){
-        e.preventDefault();
-        var touchObject = e.changedTouches[0];
-        fpMove(touchObject);
-    }, false);
-    
-    window.addEventListener('mousemove', function(e){
-        if (!fpStatus) return;
-            fpMove(e);
-    }, false);
-    
 
 
-
-    function fpStop(e) {
-        fpStatus = 0;
-        currSlide = parseInt($('body').attr('data-slide'));
-        if(Math.abs(fpDelta / vh()) > 0.2){
-            if(fpDelta > 0  && currSlide != 1) doScroll(fpDelta,currSlide,-1); 
-            if(fpDelta < 0  && currSlide < secCount - 1) doScroll(fpDelta,currSlide,1); 
-        } else {
-            $(fpObject).attr('style','');
+    if(mob(1024) && false){
+        var fpContainer = $('#wrap')[0];
+        var fpObject = $('#scroll-obj1')[0];
+        var fpObject2 = $('#scroll-obj2')[0];
+        var fpContainerRect;
+        var fpObjectRect;
+        var fpTransform = 0;
+        var fpStartY = 0;
+        var fpY = 0;
+        var fpStatus = 0;
+        var fpDelta = 0;
+        
+        function fpStart (e) {
+            fpStatus = 1;
+            fpContainerRect = fpContainer.getBoundingClientRect();
+            fpObjectRect = fpObject.getBoundingClientRect();
+        //	fpX = fpObjectRect.left;
+            fpY = fpObjectRect.top;
+            fpStartY = parseInt(e.clientY);	
         }
-    }
-    
-
-    function doScroll(d,currSlide,direction){
-        let doScrollDestination = 0;
-        if(currSlide <= 3){
-            doScrollDestination = fpTransform + (vh() - d)*direction;
-            fpObject.style['transform'] = 'translate3d(0,' + -doScrollDestination + 'px,0)';
-            $('body').addClass('noanim');
-        } else {
-            doScrollDestination = fpTransform + (vh() - d)*direction;
-            fpObject2.style['transform'] = 'translate3d(0,' + -doScrollDestination + 'px,0)';
+        
+        fpContainer.addEventListener('touchstart', function(e){
+            e.preventDefault();
+            var touchObject = e.changedTouches[0];
+            fpStart(touchObject);
+        }, false);
+        
+        fpContainer.addEventListener('mousedown', function(e){
+            e.preventDefault();
+            fpStart(e);
+        }, false);
+        
+        function fpMove(e){
+            var containerHeight = fpContainerRect.right - fpContainerRect.left;
+            var objectHeight = fpObjectRect.height;
+            fpDelta = parseInt(e.clientY) - fpStartY;
+            fpTransform = fpY + fpDelta;
+            if (fpTransform + objectHeight < containerHeight) fpTransform = containerHeight - objectHeight;
+            if (fpTransform > 0) fpTransform = 0;
+            fpObject.style['transform'] = 'translate3d(0,' + fpTransform + 'px,0)';
         }
-        setTimeout(function(){
-            direction > 0 ?  $('body').attr('data-slide',++currSlide) : $('body').attr('data-slide',--currSlide);
-            $('#scroll-obj1').attr('style','');
+        
+        
+        
+        fpContainer.addEventListener('touchmove', function(e){
+            e.preventDefault();
+            var touchObject = e.changedTouches[0];
+            fpMove(touchObject);
+        }, false);
+        
+        window.addEventListener('mousemove', function(e){
+            if (!fpStatus) return;
+                fpMove(e);
+        }, false);
+        
+
+
+
+        function fpStop(e) {
+            fpStatus = 0;
+            currSlide = parseInt($('body').attr('data-slide'));
+            if(Math.abs(fpDelta / vh()) > 0.2){
+                if(fpDelta > 0  && currSlide != 1) doScroll(fpDelta,currSlide,-1); 
+                if(fpDelta < 0  && currSlide < secCount - 1) doScroll(fpDelta,currSlide,1); 
+            } else {
+                $(fpObject).attr('style','');
+            }
+        }
+        
+
+        function doScroll(d,currSlide,direction){
+            let doScrollDestination = 0;
+            if(currSlide <= 3){
+                doScrollDestination = fpTransform + (vh() - d)*direction;
+                fpObject.style['transform'] = 'translate3d(0,' + -doScrollDestination + 'px,0)';
+                $('body').addClass('noanim');
+            } else {
+                doScrollDestination = fpTransform + (vh() - d)*direction;
+                fpObject2.style['transform'] = 'translate3d(0,' + -doScrollDestination + 'px,0)';
+            }
             setTimeout(function(){
-                $('body').removeClass('noanim');
-            },100)
-            
-        },1000)
+                direction > 0 ?  $('body').attr('data-slide',++currSlide) : $('body').attr('data-slide',--currSlide);
+                $('#scroll-obj1').attr('style','');
+                setTimeout(function(){
+                    $('body').removeClass('noanim');
+                },100)
+                
+            },1000)
 
+        }
+
+
+
+
+        fpContainer.addEventListener('touchend', function(e){
+            e.preventDefault();
+            var touchObject = e.changedTouches[0];
+            fpStop(touchObject);
+        }, false);
+        
+        window.addEventListener('mouseup', function(e){
+            //e.preventDefault();
+            fpStop(e);
+        }, false);
+    
     }
 
 
 
-
-    fpContainer.addEventListener('touchend', function(e){
-        e.preventDefault();
-        var touchObject = e.changedTouches[0];
-        fpStop(touchObject);
-    }, false);
-    
-    window.addEventListener('mouseup', function(e){
-        //e.preventDefault();
-        fpStop(e);
-    }, false);
-    
-    
-    
-    
-    */
-
-
-
-
-
-
-
-
+   
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
  
+
+
+
+
+
+
+
+
+
+
 
 
 
